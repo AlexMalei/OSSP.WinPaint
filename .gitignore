@@ -27,3 +27,13 @@
 *.exe
 *.out
 *.app
+
+WinPaint/Debug/
+WinPaint/.vs/
+
+*.tlog
+*.pdb
+*.lik
+*.filters
+*.sdf
+*.aps
