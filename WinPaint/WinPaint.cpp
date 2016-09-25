@@ -1,5 +1,11 @@
 #include "stdafx.h"
 #include "WinPaint.h"
+#include "DrawAction.h"
+#include <vector>
+#include "Shape.h"
+#include "Line.h"
+#include "LineCreator.h"
+#include "Renderer.h"
 
 #define MAX_LOADSTRING 100
 
@@ -11,6 +17,18 @@ ATOM MyRegisterClass(HINSTANCE hInstance);
 BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
+
+std::unique_ptr<paint::Renderer> renderer;
+std::shared_ptr<paint::ICreator> currentCreator;
+
+void InitRenderer(HWND hWnd)
+{
+	currentCreator = std::make_shared<paint::LineCreator>();
+	renderer.reset(new paint::Renderer(hWnd));
+
+	renderer->SetActiveCreator(currentCreator);
+	currentCreator->AddObserver(renderer.get());
+}
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
@@ -77,6 +95,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
+	InitRenderer(hWnd);
+
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
@@ -90,6 +110,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 	{
 		int wmId = LOWORD(wParam);
+
 		// Parse the menu selections:
 		switch (wmId)
 		{
@@ -106,12 +127,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_PAINT:
 	{
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hWnd, &ps);
-		// TODO: Add any drawing code that uses hdc here...
-		EndPaint(hWnd, &ps);
+		renderer->Render();
 	}
-	break;
+		break;
+	case WM_LBUTTONDOWN:
+		currentCreator->OnPress(LOWORD(lParam), HIWORD(lParam));
+		break;
+	case WM_LBUTTONUP:
+		currentCreator->OnRelease(LOWORD(lParam), HIWORD(lParam));
+		break;
+	case WM_MOUSEMOVE:
+		currentCreator->OnMove(LOWORD(lParam), HIWORD(lParam));
+		break;
+	case WM_LBUTTONDBLCLK:
+		currentCreator->OnDoubleClick(LOWORD(lParam), HIWORD(lParam));
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
@@ -121,10 +151,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-// Message handler for about box.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
