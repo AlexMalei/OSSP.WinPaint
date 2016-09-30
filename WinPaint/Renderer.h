@@ -3,6 +3,7 @@
 #include "Shape.h"
 #include <vector>
 #include "BaseCreator.h"
+#include "Point.h"
 
 namespace paint
 {
@@ -10,6 +11,8 @@ namespace paint
 	{
 	public:
 		Renderer(HWND hWnd);
+
+		void Init();
 
 		void NotifyCreationFinished() override;
 		void NotifyCreationStateChanged() override;
@@ -19,16 +22,17 @@ namespace paint
 		void SetActiveCreator(std::shared_ptr<ICreator> creator) { m_currentCreator = creator; }
 		std::shared_ptr<ICreator> GetActiveCreator() { return m_currentCreator; }
 
+		void Resize(Point size);
+
 	private:
-		void RenderShape(HDC hdc, Shape* shape);
+		void RenderShape(Shape* shape);
+		
+		void InitBackbuffer(HDC context, int width, int height);
 
-		void Init();
-
-		HWND m_hwnd;
-		HBITMAP m_offscreenBitmap;
-		HDC m_offscreenHdc;
-		RECT m_wndClientRect;
-		LPPAINTSTRUCT m_ps;
+		HWND m_hwnd; // Window handle
+		HBITMAP m_offscreenBitmap;	// Offscreen buffer
+		HDC m_offscreenHdc;			// Backbuffer context
+		RECT m_wndClientRect;		// Client rect
 		HDC m_screenContext;
 
 		std::shared_ptr<ICreator> m_currentCreator;

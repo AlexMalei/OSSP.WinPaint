@@ -4,6 +4,8 @@
 
 using namespace paint;
 
+/////////////////////////////////////////////////////
+
 Renderer::Renderer(HWND hWnd)
 	: m_hwnd(hWnd)
 {
@@ -13,6 +15,8 @@ Renderer::Renderer(HWND hWnd)
 	m_shapes.push_back(shape);
 }
 
+/////////////////////////////////////////////////////
+
 void Renderer::NotifyCreationFinished()
 {
 	m_shapes.push_back(m_currentCreator->GetShape());
@@ -20,14 +24,19 @@ void Renderer::NotifyCreationFinished()
 	InvalidateRect(m_hwnd, nullptr, TRUE);
 }
 
+/////////////////////////////////////////////////////
+
 void Renderer::NotifyCreationStateChanged()
 {
 	InvalidateRect(m_hwnd, nullptr, TRUE);
 }
 
+/////////////////////////////////////////////////////
+
 void Renderer::Render()
 {
-	m_screenContext = BeginPaint(m_hwnd, m_ps);
+	PAINTSTRUCT ps;
+	m_screenContext = BeginPaint(m_hwnd, &ps);
 
 	HBITMAP oldBitmap = static_cast<HBITMAP>(SelectObject(m_offscreenHdc, m_offscreenBitmap));
 
@@ -36,33 +45,34 @@ void Renderer::Render()
 	FillRect(m_offscreenHdc, &m_wndClientRect, hbrBkGnd);
 	DeleteObject(hbrBkGnd);
 
-	// [ RENDER ]
+	// Render the scene
 
 	for (auto shape : m_shapes)
 	{
-		RenderShape(m_offscreenHdc, shape);
+		RenderShape(shape);
 	}
 
 	auto currentCreatorShape = m_currentCreator->GetShape();
 	if (currentCreatorShape)
 	{
-		RenderShape(m_offscreenHdc, currentCreatorShape);
+		RenderShape(currentCreatorShape);
 	}
 
-	// [ RENDER ]
+	// 
 
 	int width = m_wndClientRect.right - m_wndClientRect.left;
 	int height = m_wndClientRect.bottom - m_wndClientRect.top;
 
-	BitBlt(m_screenContext, m_wndClientRect.left, m_wndClientRect.top, width, height, m_offscreenHdc, 0, 0, SRCCOPY);
-
 	// Swap buffers
+	BitBlt(m_screenContext, m_wndClientRect.left, m_wndClientRect.top, width, height, m_offscreenHdc, 0, 0, SRCCOPY);
 	SelectObject(m_offscreenHdc, oldBitmap);
 
-	EndPaint(m_hwnd, m_ps);
+	EndPaint(m_hwnd, &ps);
 }
 
-void Renderer::RenderShape(HDC hdc, Shape* shape)
+/////////////////////////////////////////////////////
+
+void Renderer::RenderShape(Shape* shape)
 {
 	auto shapeType = shape->GetType();
 
@@ -74,26 +84,42 @@ void Renderer::RenderShape(HDC hdc, Shape* shape)
 		auto topLeft = line->GetTopLeft();
 		auto bottomRight = line->GetRightBottom();
 
-		MoveToEx(hdc, topLeft.x, topLeft.y, NULL);
-		LineTo(hdc, bottomRight.x, bottomRight.y);
+		MoveToEx(m_offscreenHdc, topLeft.x, topLeft.y, NULL);
+		LineTo(m_offscreenHdc, bottomRight.x, bottomRight.y);
 
 		break;
 	}
 }
 
+/////////////////////////////////////////////////////
+
 void Renderer::Init()
 {
-	m_ps = new PAINTSTRUCT();
-
-	m_screenContext = BeginPaint(m_hwnd, m_ps);
+	PAINTSTRUCT ps;
+	m_screenContext = BeginPaint(m_hwnd, &ps);
 
 	GetClientRect(m_hwnd, &m_wndClientRect);
 	int width = m_wndClientRect.right - m_wndClientRect.left;
 	int height = m_wndClientRect.bottom - m_wndClientRect.top;
 
-	// Create back buffer
-	m_offscreenHdc = CreateCompatibleDC(m_screenContext);
-	m_offscreenBitmap = CreateCompatibleBitmap(m_screenContext, width, height);
+	InitBackbuffer(m_screenContext, width, height);
 
-	EndPaint(m_hwnd, m_ps);
+	EndPaint(m_hwnd, &ps);
 }
+
+/////////////////////////////////////////////////////
+
+void Renderer::Resize(Point size)
+{
+	Init();
+}
+
+/////////////////////////////////////////////////////
+
+void Renderer::InitBackbuffer(HDC context, int width, int height)
+{
+	m_offscreenHdc = CreateCompatibleDC(context);
+	m_offscreenBitmap = CreateCompatibleBitmap(context, width, height);
+}
+
+/////////////////////////////////////////////////////

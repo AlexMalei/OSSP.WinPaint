@@ -4,11 +4,15 @@
 
 using namespace paint;
 
+/////////////////////////////////////////////////////
+
 void LineCreator::OnPress(int x, int y)
 {
 	Point startPoint(x, y);
 	m_createdShape = new Line(startPoint, startPoint);
 }
+
+/////////////////////////////////////////////////////
 
 void LineCreator::OnRelease(int x, int y)
 {
@@ -21,6 +25,8 @@ void LineCreator::OnRelease(int x, int y)
 	}
 }
 
+/////////////////////////////////////////////////////
+
 void LineCreator::OnMove(int x, int y)
 {
 	if (m_createdShape)
@@ -30,7 +36,11 @@ void LineCreator::OnMove(int x, int y)
 	}
 }
 
+/////////////////////////////////////////////////////
+
 void LineCreator::OnDoubleClick(int x, int y)
 {
 
 }
+
+/////////////////////////////////////////////////////

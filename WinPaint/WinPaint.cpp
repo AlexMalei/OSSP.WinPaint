@@ -130,6 +130,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		renderer->Render();
 	}
 		break;
+	case WM_ERASEBKGND:
+		break;
 	case WM_LBUTTONDOWN:
 		currentCreator->OnPress(LOWORD(lParam), HIWORD(lParam));
 		break;
@@ -141,6 +143,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_LBUTTONDBLCLK:
 		currentCreator->OnDoubleClick(LOWORD(lParam), HIWORD(lParam));
+		break;
+	case WM_SIZE:
+		renderer->Init();
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
