@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "LineCreator.h"
-#include "Line.h"
+#include "Shapes/Line.h"
 
 using namespace paint;
 

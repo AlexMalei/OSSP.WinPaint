@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Renderer.h"
-#include "Line.h"
+#include "Shapes/Line.h"
 
 using namespace paint;
 
@@ -112,6 +112,7 @@ void Renderer::Init()
 void Renderer::Resize(Point size)
 {
 	Init();
+	Refresh();
 }
 
 /////////////////////////////////////////////////////
@@ -120,6 +121,23 @@ void Renderer::InitBackbuffer(HDC context, int width, int height)
 {
 	m_offscreenHdc = CreateCompatibleDC(context);
 	m_offscreenBitmap = CreateCompatibleBitmap(context, width, height);
+}
+
+/////////////////////////////////////////////////////
+
+void Renderer::Refresh()
+{
+	InvalidateRect(m_hwnd, nullptr, FALSE);
+}
+
+/////////////////////////////////////////////////////
+
+BITMAP Renderer::GetImage()
+{
+	BITMAP bitmap;
+	GetObject(m_offscreenBitmap, sizeof(BITMAP), &bitmap);
+
+	return bitmap;
 }
 
 /////////////////////////////////////////////////////

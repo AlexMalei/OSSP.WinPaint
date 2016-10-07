@@ -1,7 +1,7 @@
 #pragma once
-#include "Shape.h"
-#include "Observable.h"
-#include "CreationObserver.h"
+#include "Shapes/Shape.h"
+#include "Observers/Observable.h"
+#include "Observers/CreationObserver.h"
 
 namespace paint
 {

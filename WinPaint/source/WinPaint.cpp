@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "WinPaint.h"
 #include <vector>
-#include "Shape.h"
-#include "Line.h"
-#include "LineCreator.h"
+#include "Shapes/Shape.h"
+#include "Shapes/Line.h"
+#include "Creators/LineCreator.h"
 #include "Renderer.h"
 #include "InputManager.h"
 
@@ -17,6 +17,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance);
 BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
+
+void OnMousePress(paint::MouseButton button, paint::Point mousePos);
+void OnMouseRelease(paint::MouseButton button, paint::Point mousePos);
+void OnMouseMove(paint::Point mousePos);
 
 std::unique_ptr<paint::Renderer> renderer;
 std::shared_ptr<paint::ICreator> currentCreator;
@@ -49,7 +53,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINPAINT));
 
 	// Init input manager
-	new paint::InputManager();
+	auto inputMgr = new paint::InputManager();
+	inputMgr->AddMousePressCallback(&OnMousePress);
+	inputMgr->AddMouseReleaseCallback(&OnMouseRelease);
+	inputMgr->AddMouseMoveCallback(&OnMouseMove);
 
 	MSG msg;
 
@@ -61,7 +68,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 			DispatchMessage(&msg);
 		}
 
-		paint::InputManager::GetInstance()->Update();
+		paint::InputManager::GetInstance()->Update(msg.hwnd);
 	}
 
 	paint::InputManager::FreeInstance();
@@ -133,26 +140,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_PAINT:
-	{
 		renderer->Render();
-	}
 		break;
 	case WM_ERASEBKGND:
 		break;
-	case WM_LBUTTONDOWN:
-		currentCreator->OnPress(LOWORD(lParam), HIWORD(lParam));
-		break;
-	case WM_LBUTTONUP:
-		currentCreator->OnRelease(LOWORD(lParam), HIWORD(lParam));
-		break;
-	case WM_MOUSEMOVE:
-		currentCreator->OnMove(LOWORD(lParam), HIWORD(lParam));
-		break;
-	case WM_LBUTTONDBLCLK:
-		currentCreator->OnDoubleClick(LOWORD(lParam), HIWORD(lParam));
-		break;
 	case WM_SIZE:
-		renderer->Init();
+		renderer->Resize(paint::Point(LOWORD(lParam), HIWORD(lParam)));
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
@@ -161,6 +154,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
+}
+
+void OnMousePress(paint::MouseButton button, paint::Point mousePos)
+{
+	currentCreator->OnPress(mousePos.x, mousePos.y);
+}
+
+void OnMouseRelease(paint::MouseButton button, paint::Point mousePos)
+{
+	currentCreator->OnRelease(mousePos.x, mousePos.y);
+}
+
+void OnMouseMove(paint::Point mousePos)
+{
+	currentCreator->OnMove(mousePos.x, mousePos.y);
 }
 
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)

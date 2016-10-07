@@ -1,9 +1,9 @@
 #pragma once
-#include "CreationObserver.h"
-#include "Shape.h"
+#include "Observers/CreationObserver.h"
+#include "Shapes/Shape.h"
 #include <vector>
-#include "BaseCreator.h"
-#include "Point.h"
+#include "Creators/BaseCreator.h"
+#include "Shapes/Point.h"
 
 namespace paint
 {
@@ -23,6 +23,10 @@ namespace paint
 		std::shared_ptr<ICreator> GetActiveCreator() { return m_currentCreator; }
 
 		void Resize(Point size);
+
+		void Refresh();
+
+		BITMAP GetImage();
 
 	private:
 		void RenderShape(Shape* shape);
