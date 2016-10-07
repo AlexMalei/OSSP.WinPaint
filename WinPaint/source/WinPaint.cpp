@@ -1,38 +1,28 @@
 #include "stdafx.h"
 #include "WinPaint.h"
-#include <vector>
-#include "Shapes/Shape.h"
-#include "Shapes/Line.h"
-#include "Creators/LineCreator.h"
-#include "Renderer.h"
 #include "InputManager.h"
+#include "AppContext.h"
 
 #define MAX_LOADSTRING 100
+
+/////////////////////////////////////////////////////
 
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+
+/////////////////////////////////////////////////////
 
 ATOM MyRegisterClass(HINSTANCE hInstance);
 BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 
-void OnMousePress(paint::MouseButton button, paint::Point mousePos);
-void OnMouseRelease(paint::MouseButton button, paint::Point mousePos);
-void OnMouseMove(paint::Point mousePos);
+/////////////////////////////////////////////////////
 
-std::unique_ptr<paint::Renderer> renderer;
-std::shared_ptr<paint::ICreator> currentCreator;
+std::unique_ptr<paint::AppContext> context;
 
-void InitRenderer(HWND hWnd)
-{
-	currentCreator = std::make_shared<paint::LineCreator>();
-	renderer.reset(new paint::Renderer(hWnd));
-
-	renderer->SetActiveCreator(currentCreator);
-	currentCreator->AddObserver(renderer.get());
-}
+/////////////////////////////////////////////////////
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
@@ -52,12 +42,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINPAINT));
 
-	// Init input manager
-	auto inputMgr = new paint::InputManager();
-	inputMgr->AddMousePressCallback(&OnMousePress);
-	inputMgr->AddMouseReleaseCallback(&OnMouseRelease);
-	inputMgr->AddMouseMoveCallback(&OnMouseMove);
-
 	MSG msg;
 
 	while (GetMessage(&msg, nullptr, 0, 0))
@@ -71,10 +55,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 		paint::InputManager::GetInstance()->Update(msg.hwnd);
 	}
 
-	paint::InputManager::FreeInstance();
-
 	return (int)msg.wParam;
 }
+
+/////////////////////////////////////////////////////
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
@@ -97,6 +81,8 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	return RegisterClassExW(&wcex);
 }
 
+/////////////////////////////////////////////////////
+
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // Store instance handle in our global variable
@@ -109,13 +95,15 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
-	InitRenderer(hWnd);
+	context.reset(new paint::AppContext(hWnd));
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
 	return TRUE;
 }
+
+/////////////////////////////////////////////////////
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -140,12 +128,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_PAINT:
-		renderer->Render();
+		context->OnRender();
 		break;
 	case WM_ERASEBKGND:
 		break;
 	case WM_SIZE:
-		renderer->Resize(paint::Point(LOWORD(lParam), HIWORD(lParam)));
+		context->OnResize(paint::Point(LOWORD(lParam), HIWORD(lParam)));
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
@@ -156,20 +144,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void OnMousePress(paint::MouseButton button, paint::Point mousePos)
-{
-	currentCreator->OnPress(mousePos.x, mousePos.y);
-}
-
-void OnMouseRelease(paint::MouseButton button, paint::Point mousePos)
-{
-	currentCreator->OnRelease(mousePos.x, mousePos.y);
-}
-
-void OnMouseMove(paint::Point mousePos)
-{
-	currentCreator->OnMove(mousePos.x, mousePos.y);
-}
+/////////////////////////////////////////////////////
 
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -190,3 +165,5 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return (INT_PTR)FALSE;
 }
+
+/////////////////////////////////////////////////////

@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\AppContext.h" />
     <ClInclude Include="..\source\Creators\BaseCreator.h" />
     <ClInclude Include="..\source\Creators\Factory.h" />
     <ClInclude Include="..\source\Creators\LineCreator.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="..\source\targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\AppContext.cpp" />
     <ClCompile Include="..\source\Creators\LineCreator.cpp" />
     <ClCompile Include="..\source\InputManager.cpp" />
     <ClCompile Include="..\source\Renderer.cpp" />
