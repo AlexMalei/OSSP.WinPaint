@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "WinPaint.h"
-#include "DrawAction.h"
 #include <vector>
 #include "Shape.h"
 #include "Line.h"
 #include "LineCreator.h"
 #include "Renderer.h"
+#include "InputManager.h"
 
 #define MAX_LOADSTRING 100
 
@@ -48,6 +48,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINPAINT));
 
+	// Init input manager
+	new paint::InputManager();
+
 	MSG msg;
 
 	while (GetMessage(&msg, nullptr, 0, 0))
@@ -57,7 +60,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+
+		paint::InputManager::GetInstance()->Update();
 	}
+
+	paint::InputManager::FreeInstance();
 
 	return (int)msg.wParam;
 }
