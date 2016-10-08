@@ -2,6 +2,7 @@
 #include "WinPaint.h"
 #include "InputManager.h"
 #include "AppContext.h"
+#include "SceneManager.h"
 
 #define MAX_LOADSTRING 100
 
@@ -11,6 +12,7 @@ HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 HWND hwnd;
+HMENU menu;
 
 /////////////////////////////////////////////////////
 
@@ -120,6 +122,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// Parse the menu selections:
 		switch (wmId)
 		{
+		case IDM_UNDO:
+			paint::SceneManager::GetInstance()->UndoAction();
+			break;
+		case IDM_REDO:
+			paint::SceneManager::GetInstance()->RedoAction();
+			break;
 		case ID_TOOLBAR_PEN:
 			toolbar->SelectTool(paint::Tool::Pen);
 			break;
@@ -180,6 +188,8 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 VOID InitToolsMenuItemsAssocs()
 {
+	menu = GetMenu(hwnd);
+
 	std::unordered_map<DWORD, paint::Tool> assocs;
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_PEN, paint::Tool::Pen));
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_LINE, paint::Tool::Line));

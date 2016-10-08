@@ -12,12 +12,22 @@ namespace paint
 		SceneManager();
 		~SceneManager();
 
+		void SetButtonsId(DWORD undoButtonId, DWORD redoButtonId);
+
 		void NotifyCreationFinished() override;
 		void NotifyCreationStateChanged() override;
 
 		const std::vector<Shape*>& GetShapes() const { return m_shapes; }
 
+		void UndoAction();
+		void RedoAction();
+		
+		void UpdateHistoryButtons();
+
 	private:
 		std::vector<Shape*> m_shapes;
+		std::vector<Shape*> m_undoBuffer;
+		DWORD m_undoButtonId;
+		DWORD m_redoButtonId;
 	};
 }

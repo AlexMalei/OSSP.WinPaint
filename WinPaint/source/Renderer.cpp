@@ -37,14 +37,12 @@ void Renderer::Render()
 	// Render the scene
 
 	auto shapes = SceneManager::GetInstance()->GetShapes();
-
 	for (auto shape : shapes)
 	{
 		RenderShape(shape);
 	}
 
-	// 
-
+	// Read client size
 	int width = m_wndClientRect.right - m_wndClientRect.left;
 	int height = m_wndClientRect.bottom - m_wndClientRect.top;
 

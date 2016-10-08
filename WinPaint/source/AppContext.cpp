@@ -4,6 +4,7 @@
 #include "Creators/PenDrawer.h"
 #include "InputManager.h"
 #include "SceneManager.h"
+#include "resource.h"
 
 using namespace paint;
 
@@ -41,7 +42,9 @@ AppContext::AppContext(HWND hwnd)
 	: m_hwnd(hwnd)
 {
 	m_renderer.reset(new Renderer(m_hwnd));
-	new SceneManager();
+
+	auto sceneMgr = new SceneManager();
+	sceneMgr->SetButtonsId(IDM_UNDO, IDM_REDO);
 
 	InitToolbar();
 	InitInputManager();
