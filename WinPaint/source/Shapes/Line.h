@@ -16,7 +16,7 @@ namespace paint
 		void SetTopLeft(const Point& p) { m_topLeft = p; }
 		void SetBottomRight(const Point& p) { m_rightBottom = p; }
 
-		virtual ShapeType GetType() override { return ShapeType::Line; }
+		virtual Tool GetTool() override { return Tool::Line; }
 
 	protected:
 		Point m_topLeft;

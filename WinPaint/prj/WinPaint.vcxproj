@@ -150,6 +150,7 @@
     <ClInclude Include="..\source\Creators\BaseCreator.h" />
     <ClInclude Include="..\source\Creators\Factory.h" />
     <ClInclude Include="..\source\Creators\LineCreator.h" />
+    <ClInclude Include="..\source\Creators\PenDrawer.h" />
     <ClInclude Include="..\source\InputManager.h" />
     <ClInclude Include="..\source\Observers\CreationObserver.h" />
     <ClInclude Include="..\source\Observers\Observable.h" />
@@ -158,7 +159,9 @@
     <ClInclude Include="..\source\resource.h" />
     <ClInclude Include="..\source\Savers\BmpSaver.h" />
     <ClInclude Include="..\source\Savers\IBitmapSaver.h" />
+    <ClInclude Include="..\source\SceneManager.h" />
     <ClInclude Include="..\source\Shapes\Line.h" />
+    <ClInclude Include="..\source\Shapes\Pen.h" />
     <ClInclude Include="..\source\Shapes\Point.h" />
     <ClInclude Include="..\source\Shapes\Rectangle.h" />
     <ClInclude Include="..\source\Shapes\Shape.h" />
@@ -166,14 +169,20 @@
     <ClInclude Include="..\source\System\SafeEnum.h" />
     <ClInclude Include="..\source\System\Singleton.h" />
     <ClInclude Include="..\source\targetver.h" />
+    <ClInclude Include="..\source\Toolbar.h" />
+    <ClInclude Include="..\source\ToolDefs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\AppContext.cpp" />
     <ClCompile Include="..\source\Creators\LineCreator.cpp" />
+    <ClCompile Include="..\source\Creators\PenDrawer.cpp" />
     <ClCompile Include="..\source\InputManager.cpp" />
     <ClCompile Include="..\source\Renderer.cpp" />
+    <ClCompile Include="..\source\SceneManager.cpp" />
     <ClCompile Include="..\source\Shapes\Line.cpp" />
+    <ClCompile Include="..\source\Shapes\Pen.cpp" />
     <ClCompile Include="..\source\Shapes\Rectangle.cpp" />
+    <ClCompile Include="..\source\Toolbar.cpp" />
     <ClCompile Include="..\source\WinPaint.cpp" />
     <ClCompile Include="..\source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

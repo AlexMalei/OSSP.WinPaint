@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Renderer.h"
 #include "Shapes/Line.h"
+#include "AppContext.h"
+#include "SceneManager.h"
 
 using namespace paint;
 
@@ -13,22 +15,6 @@ Renderer::Renderer(HWND hWnd)
 
 	auto shape = new paint::Line(paint::Point(25, 50), paint::Point(150, 75));
 	m_shapes.push_back(shape);
-}
-
-/////////////////////////////////////////////////////
-
-void Renderer::NotifyCreationFinished()
-{
-	m_shapes.push_back(m_currentCreator->GetShape());
-
-	InvalidateRect(m_hwnd, nullptr, TRUE);
-}
-
-/////////////////////////////////////////////////////
-
-void Renderer::NotifyCreationStateChanged()
-{
-	InvalidateRect(m_hwnd, nullptr, TRUE);
 }
 
 /////////////////////////////////////////////////////
@@ -47,15 +33,11 @@ void Renderer::Render()
 
 	// Render the scene
 
-	for (auto shape : m_shapes)
+	auto shapes = SceneManager::GetInstance()->GetShapes();
+
+	for (auto shape : shapes)
 	{
 		RenderShape(shape);
-	}
-
-	auto currentCreatorShape = m_currentCreator->GetShape();
-	if (currentCreatorShape)
-	{
-		RenderShape(currentCreatorShape);
 	}
 
 	// 
@@ -74,12 +56,12 @@ void Renderer::Render()
 
 void Renderer::RenderShape(Shape* shape)
 {
-	auto shapeType = shape->GetType();
+	auto tool = shape->GetTool();
 
-	switch (shapeType)
+	switch (tool.value())
 	{
-	case paint::ShapeType::Line:
-		paint::Line* line = static_cast<paint::Line*>(shape);
+	case Tool::Line:
+		Line* line = static_cast<Line*>(shape);
 
 		auto topLeft = line->GetTopLeft();
 		auto bottomRight = line->GetRightBottom();

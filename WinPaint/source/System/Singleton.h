@@ -11,7 +11,7 @@ namespace paint
 		// Simple constructor is used instead of some sort of CreateInstance() method
 		Singleton()
 		{
-			s_instance = this;
+			s_instance = static_cast<T*>(this);
 		}
 
 		static void FreeInstance()
@@ -22,13 +22,16 @@ namespace paint
 
 		static T* GetInstance()
 		{
-			return static_cast<T*>(s_instance);
+			return s_instance;
 		}
 
-	private:
-		static Singleton<T>* s_instance;
+	protected:
+		~Singleton() {}
+		Singleton(Singleton& ref) {}
+
+		static T* s_instance;
 	};
 
 	template <class T>
-	Singleton<T>* Singleton<T>::s_instance = nullptr;
+	T* Singleton<T>::s_instance = nullptr;
 }

@@ -3,7 +3,7 @@
 
 namespace paint
 {
-	class LineCreator : public ICreator
+	class PenDrawer : public ICreator
 	{
 	public:
 		virtual void OnPress(int x, int y) override;
@@ -11,6 +11,6 @@ namespace paint
 		virtual void OnMove(int x, int y) override;
 		virtual void OnDoubleClick(int x, int y) override;
 
-		virtual Tool GetTool() override { return Tool::Line; }
+		virtual Tool GetTool() override { return Tool::Pen; }
 	};
 }

@@ -2,6 +2,7 @@
 #include "Shapes/Shape.h"
 #include "Observers/Observable.h"
 #include "Observers/CreationObserver.h"
+#include "ToolDefs.h"
 
 namespace paint
 {
@@ -14,6 +15,7 @@ namespace paint
 		virtual void OnDoubleClick(int x, int y) = 0;
 
 		Shape* GetShape() { return m_createdShape; }
+		virtual Tool GetTool() = 0;
 
 	protected:
 		Shape* m_createdShape;

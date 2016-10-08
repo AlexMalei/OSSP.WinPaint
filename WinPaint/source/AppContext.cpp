@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "AppContext.h"
 #include "Creators/LineCreator.h"
+#include "Creators/PenDrawer.h"
 #include "InputManager.h"
+#include "SceneManager.h"
 
 using namespace paint;
 
@@ -12,7 +14,7 @@ namespace
 {
 	void OnMousePress(MouseButton button, Point mousePos)
 	{
-		auto creator = AppContext::GetInstance()->GetCurrentCreator();
+		auto creator = AppContext::GetInstance()->GetCurrentTool();
 		creator->OnPress(mousePos.x, mousePos.y);
 	}
 
@@ -20,7 +22,7 @@ namespace
 
 	void OnMouseRelease(MouseButton button, Point mousePos)
 	{
-		auto creator = AppContext::GetInstance()->GetCurrentCreator();
+		auto creator = AppContext::GetInstance()->GetCurrentTool();
 		creator->OnRelease(mousePos.x, mousePos.y);
 	}
 
@@ -28,7 +30,7 @@ namespace
 
 	void OnMouseMove(Point mousePos)
 	{
-		auto creator = AppContext::GetInstance()->GetCurrentCreator();
+		auto creator = AppContext::GetInstance()->GetCurrentTool();
 		creator->OnMove(mousePos.x, mousePos.y);
 	}
 }
@@ -38,12 +40,10 @@ namespace
 AppContext::AppContext(HWND hwnd)
 	: m_hwnd(hwnd)
 {
-	m_currentCreator.reset(new LineCreator());
-
 	m_renderer.reset(new Renderer(m_hwnd));
-	m_renderer->SetActiveCreator(m_currentCreator);
-	m_currentCreator->AddObserver(m_renderer.get());
+	new SceneManager();
 
+	InitToolbar();
 	InitInputManager();
 }
 
@@ -59,6 +59,7 @@ AppContext::~AppContext()
 void AppContext::Cleanup()
 {
 	InputManager::FreeInstance();
+	SceneManager::FreeInstance();
 }
 
 /////////////////////////////////////////////////////
@@ -69,6 +70,24 @@ void AppContext::InitInputManager()
 	inputMgr->AddMousePressCallback(&OnMousePress);
 	inputMgr->AddMouseReleaseCallback(&OnMouseRelease);
 	inputMgr->AddMouseMoveCallback(&OnMouseMove);
+}
+
+/////////////////////////////////////////////////////
+
+void AppContext::InitToolbar()
+{
+	m_toolbar.reset(new Toolbar());
+
+	m_toolbar->RegisterTool(Tool::Pen, new PenDrawer());
+	m_toolbar->RegisterTool(Tool::Line, new LineCreator());
+
+	m_toolbar->SelectTool(Tool::Line);
+
+	// Register observers
+	auto sceneMgr = SceneManager::GetInstance();
+
+	m_toolbar->GetTool(Tool::Pen)->AddObserver(sceneMgr);
+	m_toolbar->GetTool(Tool::Line)->AddObserver(sceneMgr);
 }
 
 /////////////////////////////////////////////////////

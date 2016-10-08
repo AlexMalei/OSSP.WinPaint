@@ -14,6 +14,6 @@ namespace paint
 		int GetWidth() { return abs(m_rightBottom.x - m_topLeft.x); }
 		int GetHeight() { return abs(m_rightBottom.y - m_topLeft.y); }
 
-		virtual ShapeType GetType() override { return ShapeType::Rectangle; }
+		virtual Tool GetTool() override { return Tool::Rectangle; }
 	};
 }

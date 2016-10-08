@@ -1,0 +1,27 @@
+#include "stdafx.h"
+#include "Pen.h"
+
+using namespace paint;
+
+/////////////////////////////////////////////////////
+
+Pen::Pen()
+{
+
+}
+
+/////////////////////////////////////////////////////
+
+void Pen::AddSegment(int x1, int y1, int x2, int y2)
+{
+	m_lines.push_back(Line(x1, y1, x2, y2));
+}
+
+/////////////////////////////////////////////////////
+
+void Pen::AddSegment(Point from, Point to)
+{
+	m_lines.push_back(Line(from, to));
+}
+
+/////////////////////////////////////////////////////

@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "System/Singleton.h"
 #include "Renderer.h"
-#include "Creators/BaseCreator.h"
+#include "Toolbar.h"
 
 namespace paint
 {
@@ -13,17 +13,20 @@ namespace paint
 		~AppContext();
 
 		void InitInputManager();
+		void InitToolbar();
 
 		void Cleanup();
 
 		void OnRender();
 		void OnResize(Point size);
 
-		ICreator* GetCurrentCreator() { return m_currentCreator.get(); }
+		ICreator* GetCurrentTool() const  { return m_toolbar->GetCurrentTool(); }
+		Toolbar* GetToolbar() const { return m_toolbar.get(); }
+		Renderer* GetRenderer() const { return m_renderer.get(); }
 
 	private:
 		HWND m_hwnd;
 		std::unique_ptr<Renderer> m_renderer;
-		std::shared_ptr<ICreator> m_currentCreator;
+		std::unique_ptr<Toolbar> m_toolbar;
 	};
 }
