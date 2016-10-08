@@ -32,5 +32,5 @@ public:
 // Add a name function in your struct definition
 
 #define ENUM_START(t) switch(t) {
-#define ENUM_CASE(type) case type: return #type; 
+#define ENUM_CASE(type) case type: return #type;
 #define ENUM_END() } return "";

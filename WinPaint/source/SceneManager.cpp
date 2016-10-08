@@ -1,8 +1,12 @@
 #include "stdafx.h"
 #include "SceneManager.h"
 #include "AppContext.h"
+#include "TinyXml/tinyxml2.h"
+#include "Shapes/Line.h"
+#include "Shapes/Pen.h"
 
 using namespace paint;
+using namespace tinyxml2;
 
 /////////////////////////////////////////////////////
 
@@ -101,6 +105,75 @@ void SceneManager::UpdateHistoryButtons()
 	
 	EnableMenuItem(menu, m_undoButtonId, m_shapes.size() ? MF_ENABLED : MF_GRAYED);
 	EnableMenuItem(menu, m_redoButtonId, m_undoBuffer.size() ? MF_ENABLED : MF_GRAYED);
+}
+
+/////////////////////////////////////////////////////
+
+void SceneManager::SaveToEnhancedMetafile(const char* path)
+{
+	XMLDocument doc;
+	auto root = doc.NewElement("Scene");
+	doc.InsertEndChild(root);
+
+	for (auto shape : m_shapes)
+	{
+		auto shapeElement = shape->ToXml(&doc);
+		root->InsertEndChild(shapeElement);
+	}
+
+	doc.SaveFile(path);
+}
+
+/////////////////////////////////////////////////////
+
+void SceneManager::LoadFromEnhancedMetafile(const char* path)
+{
+	Clear();
+
+	auto context = AppContext::GetInstance();
+
+	XMLDocument doc;
+	doc.LoadFile(path);
+	
+	auto root = doc.RootElement();
+	for (auto child = root->FirstChild(); child; child = child->NextSibling())
+	{
+		auto element = child->ToElement();
+		const char* name = element->Value();
+		Tool tool = context->GetToolbar()->GetToolByName(name);
+		Shape* shape = nullptr;
+		
+		switch (tool.value())
+		{
+		case Tool::Pen:
+			shape = new Pen();
+			break;
+		case Tool::Line:
+			shape = new Line();
+			break;
+		}
+
+		if (shape)
+		{
+			shape->FromXml(element);
+
+			m_shapes.push_back(shape);
+		}
+	}
+
+	context->GetRenderer()->Refresh();
+}
+
+/////////////////////////////////////////////////////
+
+void SceneManager::Clear()
+{
+	m_shapes.clear();
+	m_undoBuffer.clear();
+
+	auto context = AppContext::GetInstance();
+	SceneManager::GetInstance()->UpdateHistoryButtons();
+	context->GetRenderer()->Refresh();
 }
 
 /////////////////////////////////////////////////////

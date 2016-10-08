@@ -18,6 +18,12 @@ namespace paint
 
 		virtual Tool GetTool() override { return Tool::Line; }
 
+		virtual void Serialize(std::ostream& s) override;
+		virtual void Deserialize(std::istream& s) override;
+
+		virtual tinyxml2::XMLElement* ToXml(tinyxml2::XMLDocument* doc) override;
+		virtual void FromXml(tinyxml2::XMLElement* element) override;
+
 	protected:
 		Point m_topLeft;
 		Point m_rightBottom;

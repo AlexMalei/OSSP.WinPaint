@@ -19,6 +19,8 @@ namespace paint
 
 		void LoadMenuItemLinks(std::unordered_map<DWORD, Tool>& links) { m_menuItemsAssoc = links; }
 
+		Tool GetToolByName(const char* name);
+
 	private:
 		ICreator* InternalGetTool(Tool tool) const;
 		void CheckMenuTool(Tool tool);

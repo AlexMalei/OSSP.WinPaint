@@ -169,9 +169,11 @@
     <ClInclude Include="..\source\Shapes\Rectangle.h" />
     <ClInclude Include="..\source\Shapes\Shape.h" />
     <ClInclude Include="..\source\stdafx.h" />
+    <ClInclude Include="..\source\System\ISerializable.h" />
     <ClInclude Include="..\source\System\SafeEnum.h" />
     <ClInclude Include="..\source\System\Singleton.h" />
     <ClInclude Include="..\source\targetver.h" />
+    <ClInclude Include="..\source\TinyXml\tinyxml2.h" />
     <ClInclude Include="..\source\Toolbar.h" />
     <ClInclude Include="..\source\ToolDefs.h" />
   </ItemGroup>
@@ -187,6 +189,7 @@
     <ClCompile Include="..\source\Shapes\Line.cpp" />
     <ClCompile Include="..\source\Shapes\Pen.cpp" />
     <ClCompile Include="..\source\Shapes\Rectangle.cpp" />
+    <ClCompile Include="..\source\TinyXml\tinyxml2.cpp" />
     <ClCompile Include="..\source\Toolbar.cpp" />
     <ClCompile Include="..\source\WinPaint.cpp" />
     <ClCompile Include="..\source\stdafx.cpp">

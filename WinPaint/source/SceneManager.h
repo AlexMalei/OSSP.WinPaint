@@ -24,6 +24,11 @@ namespace paint
 		
 		void UpdateHistoryButtons();
 
+		void SaveToEnhancedMetafile(const char* path);
+		void LoadFromEnhancedMetafile(const char* path);
+
+		void Clear();
+
 	private:
 		std::vector<Shape*> m_shapes;
 		std::vector<Shape*> m_undoBuffer;

@@ -5,6 +5,7 @@
 #include "SceneManager.h"
 
 #define MAX_LOADSTRING 100
+#define MAX_FILE_PATH 512
 
 /////////////////////////////////////////////////////
 
@@ -13,6 +14,8 @@ WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 HWND hwnd;
 HMENU menu;
+OPENFILENAMEA openFileDlg;
+CHAR fileNameBuffer[MAX_FILE_PATH];
 
 /////////////////////////////////////////////////////
 
@@ -21,6 +24,7 @@ BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 VOID InitToolsMenuItemsAssocs();
+VOID InitFileDialogs();
 
 /////////////////////////////////////////////////////
 
@@ -89,7 +93,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-	hInst = hInstance; // Store instance handle in our global variable
+	hInst = hInstance; // Store instance handle in global variable
 
 	hwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
@@ -101,11 +105,29 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	context.reset(new paint::AppContext(hwnd));
 	InitToolsMenuItemsAssocs();
+	InitFileDialogs();
 
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
 	return TRUE;
+}
+
+/////////////////////////////////////////////////////
+
+VOID InitFileDialogs()
+{
+	ZeroMemory(&openFileDlg, sizeof(OPENFILENAMEA));
+	openFileDlg.lStructSize = sizeof(OPENFILENAMEA);
+	openFileDlg.hwndOwner = hwnd;
+	openFileDlg.hInstance = hInst;
+	openFileDlg.lpstrFilter = "Enhanced metafile (*.emf)\0*.EMF\0Bitmap (*.bmp)\0*.BMP";
+	openFileDlg.nFilterIndex = 0;
+	openFileDlg.lpstrFile = fileNameBuffer;
+	openFileDlg.nMaxFile = MAX_FILE_PATH - 1;
+	openFileDlg.lpstrTitle = "Select file to open";
+
+	ZeroMemory(fileNameBuffer, MAX_FILE_PATH);
 }
 
 /////////////////////////////////////////////////////
@@ -122,6 +144,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// Parse the menu selections:
 		switch (wmId)
 		{
+		case ID_EDIT_CLEAR:
+			paint::SceneManager::GetInstance()->Clear();
+			break;
+		case IDM_OPEN:
+			if (GetOpenFileNameA(&openFileDlg))
+			{
+				paint::SceneManager::GetInstance()->LoadFromEnhancedMetafile(openFileDlg.lpstrFile);
+			}
+			break;
+		case IDM_SAVE:
+			if (GetSaveFileNameA(&openFileDlg))
+			{
+				paint::SceneManager::GetInstance()->SaveToEnhancedMetafile(openFileDlg.lpstrFile);
+			}
+			break;
 		case IDM_UNDO:
 			paint::SceneManager::GetInstance()->UndoAction();
 			break;

@@ -79,3 +79,19 @@ void Toolbar::CheckMenuTool(Tool tool)
 }
 
 /////////////////////////////////////////////////////
+
+Tool Toolbar::GetToolByName(const char* name)
+{
+	for (auto it : m_tools)
+	{
+		Tool tool = static_cast<Tool::type>(it.first);
+		if (strcmp(tool.name(), name) == 0)
+		{
+			return tool;
+		}
+	}
+
+	return Tool::None;
+}
+
+/////////////////////////////////////////////////////

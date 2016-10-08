@@ -20,6 +20,12 @@ namespace paint
 		void AddSegment(Point from, Point to);
 		void AddSegment(Line segment) { m_lines.push_back(segment); }
 
+		virtual void Serialize(std::ostream& s) override;
+		virtual void Deserialize(std::istream& s) override;
+
+		virtual tinyxml2::XMLElement* ToXml(tinyxml2::XMLDocument* doc) override;
+		virtual void FromXml(tinyxml2::XMLElement* element) override;
+
 	protected:
 		std::vector<Line> m_lines;
 	};

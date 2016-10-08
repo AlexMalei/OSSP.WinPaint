@@ -25,3 +25,43 @@ void Pen::AddSegment(Point from, Point to)
 }
 
 /////////////////////////////////////////////////////
+
+void Pen::Serialize(std::ostream& s)
+{
+
+}
+
+/////////////////////////////////////////////////////
+
+void Pen::Deserialize(std::istream& s)
+{
+
+}
+
+/////////////////////////////////////////////////////
+
+tinyxml2::XMLElement* Pen::ToXml(tinyxml2::XMLDocument* doc)
+{
+	tinyxml2::XMLElement* element = doc->NewElement("Pen");
+
+	for (auto& line : m_lines)
+	{
+		element->InsertEndChild(line.ToXml(doc));
+	}
+
+	return element;
+}
+
+/////////////////////////////////////////////////////
+
+void Pen::FromXml(tinyxml2::XMLElement* element)
+{
+	for (auto lineNode = element->FirstChild(); lineNode; lineNode = lineNode->NextSibling())
+	{
+		Line segment;
+		segment.FromXml(lineNode->ToElement());
+		m_lines.push_back(segment);
+	}
+}
+
+/////////////////////////////////////////////////////
