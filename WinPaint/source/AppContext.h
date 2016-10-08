@@ -23,6 +23,7 @@ namespace paint
 		ICreator* GetCurrentTool() const  { return m_toolbar->GetCurrentTool(); }
 		Toolbar* GetToolbar() const { return m_toolbar.get(); }
 		Renderer* GetRenderer() const { return m_renderer.get(); }
+		HWND GetWindowHandle() const { return m_hwnd; }
 
 	private:
 		HWND m_hwnd;

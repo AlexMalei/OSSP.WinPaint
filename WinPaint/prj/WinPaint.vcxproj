@@ -156,6 +156,9 @@
     <ClInclude Include="..\source\Observers\Observable.h" />
     <ClInclude Include="..\source\Observers\Observer.h" />
     <ClInclude Include="..\source\Renderer.h" />
+    <ClInclude Include="..\source\Renderers\IRenderer.h" />
+    <ClInclude Include="..\source\Renderers\LineRenderer.h" />
+    <ClInclude Include="..\source\Renderers\PenRenderer.h" />
     <ClInclude Include="..\source\resource.h" />
     <ClInclude Include="..\source\Savers\BmpSaver.h" />
     <ClInclude Include="..\source\Savers\IBitmapSaver.h" />
@@ -178,6 +181,8 @@
     <ClCompile Include="..\source\Creators\PenDrawer.cpp" />
     <ClCompile Include="..\source\InputManager.cpp" />
     <ClCompile Include="..\source\Renderer.cpp" />
+    <ClCompile Include="..\source\Renderers\LineRenderer.cpp" />
+    <ClCompile Include="..\source\Renderers\PenRenderer.cpp" />
     <ClCompile Include="..\source\SceneManager.cpp" />
     <ClCompile Include="..\source\Shapes\Line.cpp" />
     <ClCompile Include="..\source\Shapes\Pen.cpp" />

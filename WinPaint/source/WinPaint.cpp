@@ -10,6 +10,7 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+HWND hwnd;
 
 /////////////////////////////////////////////////////
 
@@ -17,6 +18,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance);
 BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
+VOID InitToolsMenuItemsAssocs();
 
 /////////////////////////////////////////////////////
 
@@ -87,18 +89,19 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // Store instance handle in our global variable
 
-	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+	hwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-	if (!hWnd)
+	if (!hwnd)
 	{
 		return FALSE;
 	}
 
-	context.reset(new paint::AppContext(hWnd));
+	context.reset(new paint::AppContext(hwnd));
+	InitToolsMenuItemsAssocs();
 
-	ShowWindow(hWnd, nCmdShow);
-	UpdateWindow(hWnd);
+	ShowWindow(hwnd, nCmdShow);
+	UpdateWindow(hwnd);
 
 	return TRUE;
 }
@@ -112,10 +115,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 	{
 		int wmId = LOWORD(wParam);
+		auto toolbar = paint::AppContext::GetInstance()->GetToolbar();
 
 		// Parse the menu selections:
 		switch (wmId)
 		{
+		case ID_TOOLBAR_PEN:
+			toolbar->SelectTool(paint::Tool::Pen);
+			break;
+		case ID_TOOLBAR_LINE:
+			toolbar->SelectTool(paint::Tool::Line);
+			break;
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
@@ -164,6 +174,17 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return (INT_PTR)FALSE;
+}
+
+/////////////////////////////////////////////////////
+
+VOID InitToolsMenuItemsAssocs()
+{
+	std::unordered_map<DWORD, paint::Tool> assocs;
+	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_PEN, paint::Tool::Pen));
+	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_LINE, paint::Tool::Line));
+
+	context->GetToolbar()->LoadMenuItemLinks(assocs);
 }
 
 /////////////////////////////////////////////////////

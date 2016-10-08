@@ -18,6 +18,7 @@ namespace paint
 
 		void AddSegment(int x1, int y1, int x2, int y2);
 		void AddSegment(Point from, Point to);
+		void AddSegment(Line segment) { m_lines.push_back(segment); }
 
 	protected:
 		std::vector<Line> m_lines;

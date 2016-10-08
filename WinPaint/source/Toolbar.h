@@ -17,10 +17,14 @@ namespace paint
 		ICreator* GetCurrentTool() const { return m_activeTool; }
 		Tool GetCurrentToolDef() const { return m_activeTool->GetTool(); }
 
+		void LoadMenuItemLinks(std::unordered_map<DWORD, Tool>& links) { m_menuItemsAssoc = links; }
+
 	private:
 		ICreator* InternalGetTool(Tool tool) const;
+		void CheckMenuTool(Tool tool);
 
 		std::unordered_map<int, ICreator*> m_tools;
+		std::unordered_map<DWORD, Tool> m_menuItemsAssoc;
 		ICreator* m_activeTool = nullptr;
 	};
 }

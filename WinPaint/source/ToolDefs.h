@@ -1,17 +1,20 @@
 #pragma once
 #include "System/SafeEnum.h"
 
-struct ToolDef
+namespace paint
 {
-	enum type
+	struct ToolDef
 	{
-		Pen,
-		Line,
-		Ellipse,
-		Rectangle,
-		Polyline,
-		Polygon,
-		Text,
+		enum type
+		{
+			Pen,
+			Line,
+			Ellipse,
+			Rectangle,
+			Polyline,
+			Polygon,
+			Text,
+		};
 	};
-};
-typedef SafeEnum<ToolDef> Tool;
+	typedef SafeEnum<ToolDef> Tool;
+}

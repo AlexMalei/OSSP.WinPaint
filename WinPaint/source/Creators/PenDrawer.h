@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseCreator.h"
+#include "Shapes/Point.h"
 
 namespace paint
 {
@@ -12,5 +13,7 @@ namespace paint
 		virtual void OnDoubleClick(int x, int y) override;
 
 		virtual Tool GetTool() override { return Tool::Pen; }
+
+		void AddSegment(Point currentPos);
 	};
 }

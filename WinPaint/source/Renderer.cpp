@@ -3,6 +3,9 @@
 #include "Shapes/Line.h"
 #include "AppContext.h"
 #include "SceneManager.h"
+#include "Shapes/Pen.h"
+#include "Renderers/PenRenderer.h"
+#include "Renderers/LineRenderer.h"
 
 using namespace paint;
 
@@ -57,19 +60,11 @@ void Renderer::Render()
 void Renderer::RenderShape(Shape* shape)
 {
 	auto tool = shape->GetTool();
+	auto shapeRenderer = GetShapeRenderer(tool);
 
-	switch (tool.value())
+	if (shapeRenderer)
 	{
-	case Tool::Line:
-		Line* line = static_cast<Line*>(shape);
-
-		auto topLeft = line->GetTopLeft();
-		auto bottomRight = line->GetRightBottom();
-
-		MoveToEx(m_offscreenHdc, topLeft.x, topLeft.y, NULL);
-		LineTo(m_offscreenHdc, bottomRight.x, bottomRight.y);
-
-		break;
+		shapeRenderer->Render(shape);
 	}
 }
 
@@ -87,6 +82,16 @@ void Renderer::Init()
 	InitBackbuffer(m_screenContext, width, height);
 
 	EndPaint(m_hwnd, &ps);
+
+	InitShapeRenderers();
+}
+
+/////////////////////////////////////////////////////
+
+void Renderer::InitShapeRenderers()
+{
+	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Pen, new PenRenderer()));
+	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Line, new LineRenderer()));
 }
 
 /////////////////////////////////////////////////////
@@ -120,6 +125,27 @@ BITMAP Renderer::GetImage()
 	GetObject(m_offscreenBitmap, sizeof(BITMAP), &bitmap);
 
 	return bitmap;
+}
+
+/////////////////////////////////////////////////////
+
+IRenderer* Renderer::GetShapeRenderer(Tool tool) const
+{
+	auto it = m_shapeRenderers.find(tool.value());
+	if (it != m_shapeRenderers.end())
+	{
+		return it->second;
+	}
+
+	return nullptr;
+}
+
+/////////////////////////////////////////////////////
+
+void Renderer::DrawLine(Point from, Point to)
+{
+	MoveToEx(m_offscreenHdc, from.x, from.y, NULL);
+	LineTo(m_offscreenHdc, to.x, to.y);
 }
 
 /////////////////////////////////////////////////////
