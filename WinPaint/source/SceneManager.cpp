@@ -4,6 +4,8 @@
 #include "TinyXml/tinyxml2.h"
 #include "Shapes/Line.h"
 #include "Shapes/Pen.h"
+#include "Shapes/Rectangle.h"
+#include "Shapes/Ellipse.h"
 
 using namespace paint;
 using namespace tinyxml2;
@@ -12,14 +14,32 @@ using namespace tinyxml2;
 
 SceneManager::SceneManager()
 {
-	
+	InitShapesFactory();
 }
 
 /////////////////////////////////////////////////////
 
 SceneManager::~SceneManager()
 {
+	for (auto shape : m_shapes)
+	{
+		delete shape;
+	}
 
+	for (auto shape : m_undoBuffer)
+	{
+		delete shape;
+	}
+}
+
+/////////////////////////////////////////////////////
+
+void SceneManager::InitShapesFactory()
+{
+	m_shapesFactory.insert(std::pair<DWORD, IFactory*>(Tool::Pen, new Factory<Pen>));
+	m_shapesFactory.insert(std::pair<DWORD, IFactory*>(Tool::Line, new Factory<Line>));
+	m_shapesFactory.insert(std::pair<DWORD, IFactory*>(Tool::Rectangle, new Factory<Rectangle>));
+	m_shapesFactory.insert(std::pair<DWORD, IFactory*>(Tool::Ellipse, new Factory<Ellipse>));
 }
 
 /////////////////////////////////////////////////////
@@ -30,6 +50,7 @@ void SceneManager::NotifyCreationFinished()
 	context->GetRenderer()->Refresh();
 
 	m_undoBuffer.clear();
+
 	UpdateHistoryButtons();
 }
 
@@ -44,7 +65,8 @@ void SceneManager::NotifyCreationStateChanged()
 	if ((shapesCount == 0) || (currentShape != m_shapes[shapesCount - 1]))
 	{
 		m_shapes.push_back(currentShape);
-	}
+		m_sceneHasChanges = true;
+	}	
 
 	AppContext::GetInstance()->GetRenderer()->Refresh();
 	UpdateHistoryButtons();
@@ -90,10 +112,11 @@ void SceneManager::RedoAction()
 
 /////////////////////////////////////////////////////
 
-void SceneManager::SetButtonsId(DWORD undoButtonId, DWORD redoButtonId)
+void SceneManager::SetButtonsId(DWORD undoButtonId, DWORD redoButtonId, DWORD saveButtonId)
 {
 	m_undoButtonId = undoButtonId;
 	m_redoButtonId = redoButtonId;
+	m_saveButtonId = saveButtonId;
 }
 
 /////////////////////////////////////////////////////
@@ -105,6 +128,7 @@ void SceneManager::UpdateHistoryButtons()
 	
 	EnableMenuItem(menu, m_undoButtonId, m_shapes.size() ? MF_ENABLED : MF_GRAYED);
 	EnableMenuItem(menu, m_redoButtonId, m_undoBuffer.size() ? MF_ENABLED : MF_GRAYED);
+	EnableMenuItem(menu, m_saveButtonId, m_sceneHasChanges ? MF_ENABLED : MF_GRAYED);
 }
 
 /////////////////////////////////////////////////////
@@ -121,7 +145,12 @@ void SceneManager::SaveToEnhancedMetafile(const char* path)
 		root->InsertEndChild(shapeElement);
 	}
 
-	doc.SaveFile(path);
+	XMLError error = doc.SaveFile(path);
+	if (error)
+	{
+		MessageBoxExA(AppContext::GetInstance()->GetWindowHandle(),
+			"Failed to save file", "IO Error", MB_ICONERROR, 0);
+	}
 }
 
 /////////////////////////////////////////////////////
@@ -133,7 +162,14 @@ void SceneManager::LoadFromEnhancedMetafile(const char* path)
 	auto context = AppContext::GetInstance();
 
 	XMLDocument doc;
-	doc.LoadFile(path);
+	XMLError error = doc.LoadFile(path);
+
+	// If file has not been parsed, throw message box error and terminate
+	if (error)
+	{
+		MessageBoxExA(context->GetWindowHandle(), "Can't load file", "IO Error", MB_ICONERROR, 0);
+		return;
+	}
 	
 	auto root = doc.RootElement();
 	for (auto child = root->FirstChild(); child; child = child->NextSibling())
@@ -141,25 +177,22 @@ void SceneManager::LoadFromEnhancedMetafile(const char* path)
 		auto element = child->ToElement();
 		const char* name = element->Value();
 		Tool tool = context->GetToolbar()->GetToolByName(name);
-		Shape* shape = nullptr;
-		
-		switch (tool.value())
-		{
-		case Tool::Pen:
-			shape = new Pen();
-			break;
-		case Tool::Line:
-			shape = new Line();
-			break;
-		}
 
-		if (shape)
+		IFactory* shapeFactory = m_shapesFactory[tool.value()];
+		if (shapeFactory)
 		{
-			shape->FromXml(element);
+			Shape* shape = static_cast<Shape*>(shapeFactory->Create());
 
-			m_shapes.push_back(shape);
-		}
+			if (shape)
+			{	
+				shape->FromXml(element);	// Deserialize
+				m_shapes.push_back(shape);	// Add to scene
+			}
+		}	
 	}
+
+	m_sceneHasChanges = false;
+	UpdateHistoryButtons();
 
 	context->GetRenderer()->Refresh();
 }

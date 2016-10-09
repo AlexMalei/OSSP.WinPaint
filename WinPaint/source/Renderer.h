@@ -27,6 +27,8 @@ namespace paint
 		IRenderer* GetShapeRenderer(Tool tool) const;
 
 		void DrawLine(Point from, Point to);
+		void DrawRect(Point from, Point to);
+		void DrawEllipse(Point from, Point to);
 
 	private:
 		void RenderShape(Shape* shape);

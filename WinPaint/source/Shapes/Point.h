@@ -1,10 +1,10 @@
 #pragma once
 #include "stdafx.h"
-#include "System/ISerializable.h"
+#include "System/IXmlConvertable.h"
 
 namespace paint
 {
-	struct Point
+	struct Point : public IXmlConvertable
 	{
 		int x, y;
 
@@ -13,7 +13,7 @@ namespace paint
 			, y(_y)
 		{}
 
-		tinyxml2::XMLElement* ToXml(tinyxml2::XMLDocument* doc)
+		virtual tinyxml2::XMLElement* ToXml(tinyxml2::XMLDocument* doc) override
 		{
 			tinyxml2::XMLElement* element = doc->NewElement("Point");
 			element->SetAttribute("x", x);
@@ -22,7 +22,7 @@ namespace paint
 			return element;
 		}
 
-		void FromXml(tinyxml2::XMLElement* element)
+		virtual void FromXml(tinyxml2::XMLElement* element) override
 		{
 			x = element->IntAttribute("x");
 			y = element->IntAttribute("y");

@@ -25,6 +25,8 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 VOID InitToolsMenuItemsAssocs();
 VOID InitFileDialogs();
+LPCSTR GetExtension(LPCSTR path);
+VOID SaveToFile(LPCSTR path);
 
 /////////////////////////////////////////////////////
 
@@ -140,7 +142,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		int wmId = LOWORD(wParam);
 		auto toolbar = paint::AppContext::GetInstance()->GetToolbar();
-
+		
 		// Parse the menu selections:
 		switch (wmId)
 		{
@@ -156,7 +158,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case IDM_SAVE:
 			if (GetSaveFileNameA(&openFileDlg))
 			{
-				paint::SceneManager::GetInstance()->SaveToEnhancedMetafile(openFileDlg.lpstrFile);
+				SaveToFile(openFileDlg.lpstrFile);
+				
+			}
+			break;
+		case IDM_SAVEAS:
+			if (GetSaveFileNameA(&openFileDlg))
+			{
+				SaveToFile(openFileDlg.lpstrFile);
 			}
 			break;
 		case IDM_UNDO:
@@ -170,6 +179,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		case ID_TOOLBAR_LINE:
 			toolbar->SelectTool(paint::Tool::Line);
+			break;
+		case ID_TOOLBAR_ELLIPSE:
+			toolbar->SelectTool(paint::Tool::Ellipse);
+			break;
+		case ID_TOOLBAR_RECTANGLE:
+			toolbar->SelectTool(paint::Tool::Rectangle);
 			break;
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
@@ -230,8 +245,43 @@ VOID InitToolsMenuItemsAssocs()
 	std::unordered_map<DWORD, paint::Tool> assocs;
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_PEN, paint::Tool::Pen));
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_LINE, paint::Tool::Line));
+	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_RECTANGLE, paint::Tool::Rectangle));
+	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_ELLIPSE, paint::Tool::Ellipse));
 
-	context->GetToolbar()->LoadMenuItemLinks(assocs);
+	auto toolbar = context->GetToolbar();
+	toolbar->LoadMenuItemLinks(assocs);
+	toolbar->SelectTool(paint::Tool::Pen);
+}
+
+/////////////////////////////////////////////////////
+
+LPCSTR GetExtension(LPCSTR path)
+{
+	LPCSTR ext = strrchr(path, '.');
+	if (ext)
+	{
+		ext++;
+	}
+
+	return ext;
+}
+
+/////////////////////////////////////////////////////
+
+VOID SaveToFile(LPCSTR path)
+{
+	LPCSTR ext = GetExtension(path);
+	if (ext)
+	{
+		if (strcmp(ext, "emf") == 0)
+		{
+			paint::SceneManager::GetInstance()->SaveToEnhancedMetafile(path);
+		}
+		else if (strcmp(ext, "bmp") == 0)
+		{
+
+		}
+	}
 }
 
 /////////////////////////////////////////////////////

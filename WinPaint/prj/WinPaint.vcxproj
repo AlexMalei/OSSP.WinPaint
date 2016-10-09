@@ -148,21 +148,26 @@
   <ItemGroup>
     <ClInclude Include="..\source\AppContext.h" />
     <ClInclude Include="..\source\Creators\BaseCreator.h" />
+    <ClInclude Include="..\source\Creators\EllipseCreator.h" />
     <ClInclude Include="..\source\Creators\Factory.h" />
     <ClInclude Include="..\source\Creators\LineCreator.h" />
     <ClInclude Include="..\source\Creators\PenDrawer.h" />
+    <ClInclude Include="..\source\Creators\RectangleCreator.h" />
     <ClInclude Include="..\source\InputManager.h" />
     <ClInclude Include="..\source\Observers\CreationObserver.h" />
     <ClInclude Include="..\source\Observers\Observable.h" />
     <ClInclude Include="..\source\Observers\Observer.h" />
     <ClInclude Include="..\source\Renderer.h" />
+    <ClInclude Include="..\source\Renderers\EllipseRenderer.h" />
     <ClInclude Include="..\source\Renderers\IRenderer.h" />
     <ClInclude Include="..\source\Renderers\LineRenderer.h" />
     <ClInclude Include="..\source\Renderers\PenRenderer.h" />
+    <ClInclude Include="..\source\Renderers\RectangleRenderer.h" />
     <ClInclude Include="..\source\resource.h" />
     <ClInclude Include="..\source\Savers\BmpSaver.h" />
     <ClInclude Include="..\source\Savers\IBitmapSaver.h" />
     <ClInclude Include="..\source\SceneManager.h" />
+    <ClInclude Include="..\source\Shapes\Ellipse.h" />
     <ClInclude Include="..\source\Shapes\Line.h" />
     <ClInclude Include="..\source\Shapes\Pen.h" />
     <ClInclude Include="..\source\Shapes\Point.h" />
@@ -170,6 +175,7 @@
     <ClInclude Include="..\source\Shapes\Shape.h" />
     <ClInclude Include="..\source\stdafx.h" />
     <ClInclude Include="..\source\System\ISerializable.h" />
+    <ClInclude Include="..\source\System\IXmlConvertable.h" />
     <ClInclude Include="..\source\System\SafeEnum.h" />
     <ClInclude Include="..\source\System\Singleton.h" />
     <ClInclude Include="..\source\targetver.h" />
@@ -179,13 +185,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\AppContext.cpp" />
+    <ClCompile Include="..\source\Creators\EllipseCreator.cpp" />
     <ClCompile Include="..\source\Creators\LineCreator.cpp" />
     <ClCompile Include="..\source\Creators\PenDrawer.cpp" />
+    <ClCompile Include="..\source\Creators\RectangleCreator.cpp" />
     <ClCompile Include="..\source\InputManager.cpp" />
     <ClCompile Include="..\source\Renderer.cpp" />
+    <ClCompile Include="..\source\Renderers\EllipseRenderer.cpp" />
     <ClCompile Include="..\source\Renderers\LineRenderer.cpp" />
     <ClCompile Include="..\source\Renderers\PenRenderer.cpp" />
+    <ClCompile Include="..\source\Renderers\RectangleRenderer.cpp" />
     <ClCompile Include="..\source\SceneManager.cpp" />
+    <ClCompile Include="..\source\Shapes\Ellipse.cpp" />
     <ClCompile Include="..\source\Shapes\Line.cpp" />
     <ClCompile Include="..\source\Shapes\Pen.cpp" />
     <ClCompile Include="..\source\Shapes\Rectangle.cpp" />

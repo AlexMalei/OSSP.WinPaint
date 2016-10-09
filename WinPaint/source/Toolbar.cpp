@@ -21,7 +21,7 @@ ICreator* Toolbar::GetTool(Tool tool) const
 
 /////////////////////////////////////////////////////
 
-void Toolbar::RegisterTool(Tool toolType, ICreator* creator)
+ICreator* Toolbar::RegisterTool(Tool toolType, ICreator* creator)
 {
 	auto mapTool = InternalGetTool(toolType);
 	if (!mapTool)
@@ -29,6 +29,8 @@ void Toolbar::RegisterTool(Tool toolType, ICreator* creator)
 		int toolId = toolType.value();
 		m_tools.insert(std::pair<int, ICreator*>(toolId, creator));
 	}
+
+	return creator;
 }
 
 /////////////////////////////////////////////////////

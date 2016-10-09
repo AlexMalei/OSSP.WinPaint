@@ -1,30 +1,30 @@
 #include "stdafx.h"
-#include "Rectangle.h"
+#include "Ellipse.h"
 
 using namespace paint;
 
 /////////////////////////////////////////////////////
 
-Rectangle::Rectangle()
+Ellipse::Ellipse()
 {}
 
 /////////////////////////////////////////////////////
 
-Rectangle::Rectangle(int x, int y, int width, int height)
+Ellipse::Ellipse(int x, int y, int width, int height)
 	: Line(Point(x, y), Point(x + width, y + height))
 {}
 
 /////////////////////////////////////////////////////
 
-Rectangle::Rectangle(Point topLeft, Point rightBottom)
+Ellipse::Ellipse(Point topLeft, Point rightBottom)
 	: Line(topLeft, rightBottom)
 {}
 
 /////////////////////////////////////////////////////
 
-tinyxml2::XMLElement* Rectangle::ToXml(tinyxml2::XMLDocument* doc)
+tinyxml2::XMLElement* Ellipse::ToXml(tinyxml2::XMLDocument* doc)
 {
-	tinyxml2::XMLElement* element = doc->NewElement("Rectangle");
+	tinyxml2::XMLElement* element = doc->NewElement("Ellipse");
 	element->InsertEndChild(m_topLeft.ToXml(doc));
 	element->InsertEndChild(m_rightBottom.ToXml(doc));
 
@@ -33,7 +33,7 @@ tinyxml2::XMLElement* Rectangle::ToXml(tinyxml2::XMLDocument* doc)
 
 /////////////////////////////////////////////////////
 
-void Rectangle::FromXml(tinyxml2::XMLElement* element)
+void Ellipse::FromXml(tinyxml2::XMLElement* element)
 {
 	auto fromElement = element->FirstChild();
 	auto toElement = fromElement->NextSibling();

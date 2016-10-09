@@ -9,7 +9,7 @@ namespace paint
 	public:
 		Toolbar();
 
-		void RegisterTool(Tool toolType, ICreator* creator);
+		ICreator* RegisterTool(Tool toolType, ICreator* creator);
 		void SelectTool(Tool tool);
 
 		ICreator* GetTool(Tool tool) const;

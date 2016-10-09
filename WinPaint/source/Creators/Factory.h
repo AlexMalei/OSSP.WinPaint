@@ -2,14 +2,14 @@
 
 namespace paint
 {
-	class BaseFactory
+	class IFactory
 	{
 	public:
 		virtual void* Create() = 0;
 	};
 
 	template <class T>
-	class Factory : public BaseFactory
+	class Factory : public IFactory
 	{
 	public:
 		virtual void* Create() override { return new T(); }

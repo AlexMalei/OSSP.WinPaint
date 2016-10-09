@@ -1,10 +1,11 @@
 #pragma once
 #include "ToolDefs.h"
 #include "System/ISerializable.h"
+#include "System/IXmlConvertable.h"
 
 namespace paint
 {
-	class Shape : public ISerializable
+	class Shape : public ISerializable, public IXmlConvertable
 	{
 	public:
 		virtual ~Shape() {}

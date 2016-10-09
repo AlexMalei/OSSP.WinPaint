@@ -2,6 +2,8 @@
 #include "AppContext.h"
 #include "Creators/LineCreator.h"
 #include "Creators/PenDrawer.h"
+#include "Creators/RectangleCreator.h"
+#include "Creators/EllipseCreator.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "resource.h"
@@ -44,7 +46,7 @@ AppContext::AppContext(HWND hwnd)
 	m_renderer.reset(new Renderer(m_hwnd));
 
 	auto sceneMgr = new SceneManager();
-	sceneMgr->SetButtonsId(IDM_UNDO, IDM_REDO);
+	sceneMgr->SetButtonsId(IDM_UNDO, IDM_REDO, IDM_SAVE);
 
 	InitToolbar();
 	InitInputManager();
@@ -79,18 +81,13 @@ void AppContext::InitInputManager()
 
 void AppContext::InitToolbar()
 {
+	auto sceneMgr = SceneManager::GetInstance();
 	m_toolbar.reset(new Toolbar());
 
-	m_toolbar->RegisterTool(Tool::Pen, new PenDrawer());
-	m_toolbar->RegisterTool(Tool::Line, new LineCreator());
-
-	m_toolbar->SelectTool(Tool::Line);
-
-	// Register observers
-	auto sceneMgr = SceneManager::GetInstance();
-
-	m_toolbar->GetTool(Tool::Pen)->AddObserver(sceneMgr);
-	m_toolbar->GetTool(Tool::Line)->AddObserver(sceneMgr);
+	m_toolbar->RegisterTool(Tool::Pen, new PenDrawer())->AddObserver(sceneMgr);
+	m_toolbar->RegisterTool(Tool::Line, new LineCreator())->AddObserver(sceneMgr);
+	m_toolbar->RegisterTool(Tool::Ellipse, new EllipseCreator())->AddObserver(sceneMgr);
+	m_toolbar->RegisterTool(Tool::Rectangle, new RectangleCreator())->AddObserver(sceneMgr);
 }
 
 /////////////////////////////////////////////////////

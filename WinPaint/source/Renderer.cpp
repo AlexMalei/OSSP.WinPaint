@@ -6,6 +6,8 @@
 #include "Shapes/Pen.h"
 #include "Renderers/PenRenderer.h"
 #include "Renderers/LineRenderer.h"
+#include "Renderers/RectangleRenderer.h"
+#include "Renderers/EllipseRenderer.h"
 
 using namespace paint;
 
@@ -90,6 +92,8 @@ void Renderer::InitShapeRenderers()
 {
 	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Pen, new PenRenderer()));
 	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Line, new LineRenderer()));
+	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Rectangle, new RectangleRenderer()));
+	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Ellipse, new EllipseRenderer()));
 }
 
 /////////////////////////////////////////////////////
@@ -144,6 +148,22 @@ void Renderer::DrawLine(Point from, Point to)
 {
 	MoveToEx(m_offscreenHdc, from.x, from.y, NULL);
 	LineTo(m_offscreenHdc, to.x, to.y);
+}
+
+/////////////////////////////////////////////////////
+
+void Renderer::DrawRect(Point from, Point to)
+{
+	SelectObject(m_offscreenHdc, GetStockObject(HOLLOW_BRUSH));
+	Rectangle(m_offscreenHdc, from.x, from.y, to.x, to.y);
+}
+
+/////////////////////////////////////////////////////
+
+void Renderer::DrawEllipse(Point from, Point to)
+{
+	SelectObject(m_offscreenHdc, GetStockObject(HOLLOW_BRUSH));
+	Ellipse(m_offscreenHdc, from.x, from.y, to.x, to.y);
 }
 
 /////////////////////////////////////////////////////
