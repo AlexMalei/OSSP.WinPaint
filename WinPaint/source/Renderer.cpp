@@ -8,6 +8,7 @@
 #include "Renderers/LineRenderer.h"
 #include "Renderers/RectangleRenderer.h"
 #include "Renderers/EllipseRenderer.h"
+#include "Renderers/PolylineRenderer.h"
 
 using namespace paint;
 
@@ -94,6 +95,7 @@ void Renderer::InitShapeRenderers()
 	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Line, new LineRenderer()));
 	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Rectangle, new RectangleRenderer()));
 	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Ellipse, new EllipseRenderer()));
+	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Polyline, new PolylineRenderer()));
 }
 
 /////////////////////////////////////////////////////

@@ -38,7 +38,14 @@ void EllipseCreator::OnMove(int x, int y)
 
 /////////////////////////////////////////////////////
 
-void EllipseCreator::OnDoubleClick(int x, int y)
+void EllipseCreator::Update()
+{
+
+}
+
+/////////////////////////////////////////////////////
+
+void EllipseCreator::OnKeyPress(DWORD keyCode)
 {
 
 }

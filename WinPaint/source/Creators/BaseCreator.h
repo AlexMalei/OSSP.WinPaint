@@ -13,6 +13,9 @@ namespace paint
 		virtual void OnRelease(int x, int y) = 0;
 		virtual void OnMove(int x, int y) = 0;
 		virtual void OnDoubleClick(int x, int y) = 0;
+		virtual void OnKeyPress(DWORD keyCode) = 0;
+
+		virtual void Update() {}
 
 		Shape* GetShape() { return m_createdShape; }
 		virtual Tool GetTool() = 0;

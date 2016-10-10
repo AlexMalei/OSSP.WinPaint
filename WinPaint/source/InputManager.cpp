@@ -16,17 +16,26 @@ void InputManager::Update(HWND hwnd)
 {
 	RefreshCursorPosition(hwnd);
 
+	// Remember old key states
 	bool mousePressedOld[MouseButton::Count];
-
 	for (WORD i = 0; i < MouseButton::Count; i++)
 	{
 		mousePressedOld[i] = m_mousePressed[i];
 	}
 
+	bool spacePressedOld = m_spacePressed;
+	bool shiftPressedOld = m_shiftPressed;
+
+	// Refresh key states
 	ParseKeyState(VK_LBUTTON, m_mouseToogled[0], m_mousePressed[0]);
 	ParseKeyState(VK_RBUTTON, m_mouseToogled[1], m_mousePressed[1]);
 	ParseKeyState(VK_MBUTTON, m_mouseToogled[2], m_mousePressed[2]);
 
+	bool fakeFlag;
+	ParseKeyState(VK_LSHIFT, fakeFlag, m_shiftPressed);
+	ParseKeyState(VK_SPACE, fakeFlag, m_spacePressed);
+
+	// Emit callbacks
 	for (WORD i = 0; i < MouseButton::Count; i++)
 	{
 		if (m_mousePressed[i] != mousePressedOld[i])
@@ -40,6 +49,15 @@ void InputManager::Update(HWND hwnd)
 				EmitMouseReleaseEvent(static_cast<MouseButton>(i));
 			}
 		}
+	}
+
+	if ((m_shiftPressed != shiftPressedOld) && m_shiftPressed)
+	{
+		EmitKeyPressEvent(VK_LSHIFT);
+	}
+	if ((m_spacePressed != spacePressedOld) && m_spacePressed)
+	{
+		EmitKeyPressEvent(VK_SPACE);
 	}
 }
 
@@ -93,6 +111,19 @@ void InputManager::EmitMouseMoveEvent()
 
 /////////////////////////////////////////////////////
 
+void InputManager::EmitKeyPressEvent(DWORD vkey)
+{
+	for (auto callback : m_keyPressCallbacks)
+	{
+		if (callback)
+		{
+			callback(vkey);
+		}
+	}
+}
+
+/////////////////////////////////////////////////////
+
 void InputManager::AddMousePressCallback(mousePressCallback callback)
 {
 	AddCallback(m_mousePressCallbacks, callback);
@@ -110,6 +141,13 @@ void InputManager::AddMouseReleaseCallback(mouseReleaseCallback callback)
 void InputManager::AddMouseMoveCallback(mouseMoveCallback callback)
 {
 	AddCallback(m_mouseMoveCallbacks, callback);
+}
+
+/////////////////////////////////////////////////////
+
+void InputManager::AddKeyPressCallback(keyPressCallback callback)
+{
+	AddCallback(m_keyPressCallbacks, callback);
 }
 
 /////////////////////////////////////////////////////

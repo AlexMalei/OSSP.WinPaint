@@ -34,13 +34,6 @@ void PenDrawer::OnMove(int x, int y)
 
 /////////////////////////////////////////////////////
 
-void PenDrawer::OnDoubleClick(int x, int y)
-{
-
-}
-
-/////////////////////////////////////////////////////
-
 void PenDrawer::AddSegment(Point currentPos)
 {
 	if (m_createdShape)

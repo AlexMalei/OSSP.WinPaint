@@ -186,6 +186,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case ID_TOOLBAR_RECTANGLE:
 			toolbar->SelectTool(paint::Tool::Rectangle);
 			break;
+		case ID_TOOLBAR_POLYLINE:
+			toolbar->SelectTool(paint::Tool::Polyline);
+			break;
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
@@ -247,6 +250,7 @@ VOID InitToolsMenuItemsAssocs()
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_LINE, paint::Tool::Line));
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_RECTANGLE, paint::Tool::Rectangle));
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_ELLIPSE, paint::Tool::Ellipse));
+	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_POLYLINE, paint::Tool::Polyline));
 
 	auto toolbar = context->GetToolbar();
 	toolbar->LoadMenuItemLinks(assocs);
