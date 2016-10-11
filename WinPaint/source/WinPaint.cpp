@@ -25,6 +25,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance);
 BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK PenWidthDialog(HWND, UINT, WPARAM, LPARAM);
 VOID InitToolsMenuItemsAssocs();
 VOID InitFileDialogs();
 LPCSTR GetExtension(LPCSTR path);
@@ -150,6 +151,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		int wmId = LOWORD(wParam);
 		auto toolbar = paint::AppContext::GetInstance()->GetToolbar();
+		DWORD state;
+		COLORREF color;
 		
 		// Parse the menu selections:
 		switch (wmId)
@@ -197,14 +200,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case ID_STYLE_PENCOLOR:
 			if (ChooseColorA(&colorDialog))
 			{
-				int a = 0;
+				context->GetToolbar()->SetPenColor(colorDialog.rgbResult);
 			}
 			break;
 		case ID_STYLE_BRUSHCOLOR:
 			if (ChooseColorA(&colorDialog))
 			{
-				
+				context->GetToolbar()->SetBrushColor(colorDialog.rgbResult);
 			}
+			break;
+		case ID_STYLE_USEBRUSH:
+			// Make menu check box
+			state = GetMenuState(menu, ID_STYLE_USEBRUSH, MF_CHECKED);
+			state = (state == MF_CHECKED) ? MF_UNCHECKED : MF_CHECKED;
+			CheckMenuItem(menu, ID_STYLE_USEBRUSH, state);
+
+			color = context->GetToolbar()->GetBrushColor();
+			color = color & 0x00FFFFFF; // Mask opacity byte
+			color |= ((state == MF_UNCHECKED) ? (0xFF << 24) : 0);
+			context->GetToolbar()->SetBrushColor(color);
+			break;
+		case ID_STYLE_PENWIDTH:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_PEN_VIEW), hWnd, PenWidthDialog);
 			break;
 		case ID_TOOLBAR_POLYLINE:
 			toolbar->SelectTool(paint::Tool::Polyline);
@@ -256,6 +273,51 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
+	return (INT_PTR)FALSE;
+}
+
+/////////////////////////////////////////////////////
+
+INT_PTR CALLBACK PenWidthDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+
+	DWORD sliderPos;
+	const DWORD maxThickness = 100;
+	std::string tempStr;
+
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		sliderPos = context->GetToolbar()->GetLineThickness();
+		tempStr = std::to_string(sliderPos);
+		sliderPos = (static_cast<float>(sliderPos) / maxThickness) * 100;
+		SendMessage(GetDlgItem(hDlg, IDC_SLIDER), TBM_SETPOS, TRUE, sliderPos);
+		
+		SetDlgItemTextA(hDlg, IDC_SLIDER_DESC, tempStr.c_str());
+		return (INT_PTR)TRUE;
+
+	case WM_HSCROLL:
+		sliderPos = SendMessage(GetDlgItem(hDlg, IDC_SLIDER), TBM_GETPOS, 0, 0);
+		sliderPos = static_cast<DWORD>((sliderPos / 100.f) * maxThickness);
+		tempStr = std::to_string(sliderPos);
+		context->GetToolbar()->SetLineThickness(sliderPos);
+
+		SetDlgItemTextA(hDlg, IDC_SLIDER_DESC, tempStr.c_str());
+		break;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+		case IDCANCEL:
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+
+		break;
+	}
+
 	return (INT_PTR)FALSE;
 }
 

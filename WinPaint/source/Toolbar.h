@@ -21,6 +21,13 @@ namespace paint
 
 		Tool GetToolByName(const char* name);
 
+		COLORREF GetPenColor() const { return m_style.m_penColor; }
+		COLORREF GetBrushColor() const { return m_style.m_brushColor; }
+		DWORD GetLineThickness() const { return m_style.m_penThickness; }
+		void SetPenColor(COLORREF color) { m_style.m_penColor = color; }
+		void SetBrushColor(COLORREF color) { m_style.m_brushColor = color; }
+		void SetLineThickness(DWORD thickness) { m_style.m_penThickness = thickness; }
+
 	private:
 		ICreator* InternalGetTool(Tool tool) const;
 		void CheckMenuTool(Tool tool);
@@ -28,5 +35,6 @@ namespace paint
 		std::unordered_map<int, ICreator*> m_tools;
 		std::unordered_map<DWORD, Tool> m_menuItemsAssoc;
 		ICreator* m_activeTool = nullptr;
+		ShapeStyle m_style;
 	};
 }

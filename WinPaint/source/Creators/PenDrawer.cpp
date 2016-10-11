@@ -2,6 +2,7 @@
 #include "PenDrawer.h"
 #include "Shapes/Pen.h"
 #include "Shapes/Line.h"
+#include "AppContext.h"
 
 using namespace paint;
 
@@ -12,6 +13,10 @@ void PenDrawer::OnPress(int x, int y)
 	Point startPoint(x, y);
 	m_createdShape = new Pen();
 	static_cast<Pen*>(m_createdShape)->AddSegment(startPoint, startPoint);
+
+	auto toolbar = AppContext::GetInstance()->GetToolbar();
+	m_createdShape->SetPenColor(toolbar->GetPenColor());
+	m_createdShape->SetLineThickness(toolbar->GetLineThickness());
 }
 
 /////////////////////////////////////////////////////

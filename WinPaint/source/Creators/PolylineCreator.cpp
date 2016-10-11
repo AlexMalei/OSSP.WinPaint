@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PolylineCreator.h"
 #include "Shapes/Polyline.h"
+#include "AppContext.h"
 
 using namespace paint;
 
@@ -12,6 +13,10 @@ void PolylineCreator::OnPress(int x, int y)
 	if (m_createdShape == nullptr)
 	{
 		m_createdShape = new Polyline();
+
+		auto toolbar = AppContext::GetInstance()->GetToolbar();
+		m_createdShape->SetPenColor(toolbar->GetPenColor());
+		m_createdShape->SetLineThickness(toolbar->GetLineThickness());
 	}
 
 	static_cast<Polyline*>(m_createdShape)->AddSegment(startPoint, startPoint);

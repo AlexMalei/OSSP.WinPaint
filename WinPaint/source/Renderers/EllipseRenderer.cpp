@@ -15,7 +15,7 @@ void EllipseRenderer::Render(Shape* shape)
 	auto topLeft = ellipse->GetTopLeft();
 	auto bottomRight = ellipse->GetRightBottom();
 
-	AppContext::GetInstance()->GetRenderer()->DrawEllipse(topLeft, bottomRight);
+	AppContext::GetInstance()->GetRenderer()->DrawEllipse(topLeft, bottomRight, (shape->GetBrushColor() >> 24) & 0xFF);
 }
 
 /////////////////////////////////////////////////////

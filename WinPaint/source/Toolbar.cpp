@@ -9,7 +9,10 @@ using namespace paint;
 
 Toolbar::Toolbar()
 {
-
+	// Setup default style
+	m_style.m_penColor = 0xFF000000;
+	m_style.m_brushColor = 0xFFFFFFFF;
+	m_style.m_penThickness = 2;
 }
 
 /////////////////////////////////////////////////////

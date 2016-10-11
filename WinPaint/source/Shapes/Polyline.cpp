@@ -49,6 +49,8 @@ tinyxml2::XMLElement* Polyline::ToXml(tinyxml2::XMLDocument* doc)
 		element->InsertEndChild(line.ToXml(doc));
 	}
 
+	element->InsertEndChild(m_style.ToXml(doc));
+
 	return element;
 }
 
@@ -56,12 +58,16 @@ tinyxml2::XMLElement* Polyline::ToXml(tinyxml2::XMLDocument* doc)
 
 void Polyline::FromXml(tinyxml2::XMLElement* element)
 {
-	for (auto lineNode = element->FirstChild(); lineNode; lineNode = lineNode->NextSibling())
+	tinyxml2::XMLNode* last = element->FirstChild();
+
+	for (; last; last = last->NextSibling())
 	{
 		Line segment;
-		segment.FromXml(lineNode->ToElement());
+		segment.FromXml(last->ToElement());
 		m_segments.push_back(segment);
 	}
+
+	m_style.FromXml(last->ToElement());
 }
 
 /////////////////////////////////////////////////////

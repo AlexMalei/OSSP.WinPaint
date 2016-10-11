@@ -11,6 +11,8 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include "TinyXml/tinyxml2.h"
 #include <Commdlg.h>
+#include <CommCtrl.h>

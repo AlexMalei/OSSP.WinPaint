@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "LineCreator.h"
 #include "Shapes/Line.h"
+#include "AppContext.h"
 
 using namespace paint;
 
@@ -10,6 +11,10 @@ void LineCreator::OnPress(int x, int y)
 {
 	Point startPoint(x, y);
 	m_createdShape = new Line(startPoint, startPoint);
+
+	auto toolbar = AppContext::GetInstance()->GetToolbar();
+	m_createdShape->SetPenColor(toolbar->GetPenColor());
+	m_createdShape->SetLineThickness(toolbar->GetLineThickness());
 }
 
 /////////////////////////////////////////////////////

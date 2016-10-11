@@ -63,6 +63,7 @@ void Renderer::RenderShape(Shape* shape)
 	auto tool = shape->GetTool();
 	auto shapeRenderer = GetShapeRenderer(tool);
 
+	RefreshShapeStyle(shape);
 	if (shapeRenderer)
 	{
 		shapeRenderer->Render(shape);
@@ -154,18 +155,43 @@ void Renderer::DrawLine(Point from, Point to)
 
 /////////////////////////////////////////////////////
 
-void Renderer::DrawRect(Point from, Point to)
+void Renderer::DrawRect(Point from, Point to, bool hollow)
 {
-	SelectObject(m_offscreenHdc, GetStockObject(HOLLOW_BRUSH));
+	if (hollow)
+	{
+		SelectObject(m_offscreenHdc, GetStockObject(HOLLOW_BRUSH));
+	}
+	
 	Rectangle(m_offscreenHdc, from.x, from.y, to.x, to.y);
 }
 
 /////////////////////////////////////////////////////
 
-void Renderer::DrawEllipse(Point from, Point to)
+void Renderer::DrawEllipse(Point from, Point to, bool hollow)
 {
-	SelectObject(m_offscreenHdc, GetStockObject(HOLLOW_BRUSH));
+	if (hollow)
+	{
+		SelectObject(m_offscreenHdc, GetStockObject(HOLLOW_BRUSH));
+	}
+	
 	Ellipse(m_offscreenHdc, from.x, from.y, to.x, to.y);
+}
+
+/////////////////////////////////////////////////////
+
+void Renderer::RefreshShapeStyle(Shape* shape)
+{
+	COLORREF penColor = shape->GetPenColor();
+	COLORREF brushColor = shape->GetBrushColor();
+	DWORD penThickness = shape->GetLineThickness();
+
+	HPEN pen = CreatePen(PS_SOLID, penThickness, penColor);
+
+	//SelectObject(m_offscreenHdc, GetStockObject(DC_PEN));
+	SelectObject(m_offscreenHdc, pen);
+	SetDCPenColor(m_offscreenHdc, penColor);
+	SelectObject(m_offscreenHdc, GetStockObject(DC_BRUSH));
+	SetDCBrushColor(m_offscreenHdc, brushColor);
 }
 
 /////////////////////////////////////////////////////

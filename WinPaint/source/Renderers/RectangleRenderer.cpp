@@ -15,7 +15,7 @@ void RectangleRenderer::Render(Shape* shape)
 	auto topLeft = rect->GetTopLeft();
 	auto bottomRight = rect->GetRightBottom();
 
-	AppContext::GetInstance()->GetRenderer()->DrawRect(topLeft, bottomRight);
+	AppContext::GetInstance()->GetRenderer()->DrawRect(topLeft, bottomRight, !!((shape->GetBrushColor() >> 24) & 0xFF));
 }
 
 /////////////////////////////////////////////////////

@@ -27,11 +27,12 @@ namespace paint
 		IRenderer* GetShapeRenderer(Tool tool) const;
 
 		void DrawLine(Point from, Point to);
-		void DrawRect(Point from, Point to);
-		void DrawEllipse(Point from, Point to);
+		void DrawRect(Point from, Point to, bool hollow);
+		void DrawEllipse(Point from, Point to, bool hollow);
 
 	private:
 		void RenderShape(Shape* shape);
+		void RefreshShapeStyle(Shape* shape);
 		
 		void InitBackbuffer(HDC context, int width, int height);
 

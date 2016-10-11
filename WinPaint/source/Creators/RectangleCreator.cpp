@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RectangleCreator.h"
 #include "Shapes/Rectangle.h"
+#include "AppContext.h"
 
 using namespace paint;
 
@@ -10,6 +11,11 @@ void RectangleCreator::OnPress(int x, int y)
 {
 	Point startPoint(x, y);
 	m_createdShape = new Rectangle(startPoint, startPoint);
+
+	auto toolbar = AppContext::GetInstance()->GetToolbar();
+	m_createdShape->SetPenColor(toolbar->GetPenColor());
+	m_createdShape->SetBrushColor(toolbar->GetBrushColor());
+	m_createdShape->SetLineThickness(toolbar->GetLineThickness());
 }
 
 /////////////////////////////////////////////////////
