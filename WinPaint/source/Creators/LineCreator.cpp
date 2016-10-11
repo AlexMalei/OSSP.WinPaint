@@ -38,7 +38,7 @@ void LineCreator::OnMove(int x, int y)
 
 /////////////////////////////////////////////////////
 
-void LineCreator::OnDoubleClick(int x, int y)
+void LineCreator::OnKeyPress(DWORD keyCode)
 {
 
 }

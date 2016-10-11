@@ -38,7 +38,7 @@ void RectangleCreator::OnMove(int x, int y)
 
 /////////////////////////////////////////////////////
 
-void RectangleCreator::OnDoubleClick(int x, int y)
+void RectangleCreator::OnKeyPress(DWORD keyCode)
 {
 
 }

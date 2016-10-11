@@ -4,6 +4,7 @@
 #include "Creators/PenDrawer.h"
 #include "Creators/RectangleCreator.h"
 #include "Creators/EllipseCreator.h"
+#include "Creators/PolylineCreator.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "resource.h"
@@ -35,6 +36,14 @@ namespace
 	{
 		auto creator = AppContext::GetInstance()->GetCurrentTool();
 		creator->OnMove(mousePos.x, mousePos.y);
+	}
+
+	/////////////////////////////////////////////////////
+
+	void OnKeyPress(DWORD keyCode)
+	{
+		auto creator = AppContext::GetInstance()->GetCurrentTool();
+		creator->OnKeyPress(keyCode);
 	}
 }
 
@@ -75,6 +84,7 @@ void AppContext::InitInputManager()
 	inputMgr->AddMousePressCallback(&OnMousePress);
 	inputMgr->AddMouseReleaseCallback(&OnMouseRelease);
 	inputMgr->AddMouseMoveCallback(&OnMouseMove);
+	inputMgr->AddKeyPressCallback(&OnKeyPress);
 }
 
 /////////////////////////////////////////////////////
@@ -88,6 +98,7 @@ void AppContext::InitToolbar()
 	m_toolbar->RegisterTool(Tool::Line, new LineCreator())->AddObserver(sceneMgr);
 	m_toolbar->RegisterTool(Tool::Ellipse, new EllipseCreator())->AddObserver(sceneMgr);
 	m_toolbar->RegisterTool(Tool::Rectangle, new RectangleCreator())->AddObserver(sceneMgr);
+	m_toolbar->RegisterTool(Tool::Polyline, new PolylineCreator())->AddObserver(sceneMgr);
 }
 
 /////////////////////////////////////////////////////
