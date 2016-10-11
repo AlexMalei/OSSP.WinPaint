@@ -209,8 +209,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\source\icon1.ico" />
     <Image Include="..\source\small.ico" />
+    <Image Include="..\source\WinPaint.bmp" />
     <Image Include="..\source\WinPaint.ico" />
+    <Image Include="..\source\WinPaint.png" />
+    <Image Include="WinPaint.bmp" />
+    <Image Include="WinPaint.png" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\source\WinPaint.rc" />

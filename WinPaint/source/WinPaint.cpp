@@ -15,6 +15,8 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 HWND hwnd;
 HMENU menu;
 OPENFILENAMEA openFileDlg;
+CHOOSECOLORA colorDialog;
+COLORREF colorRef[16];
 CHAR fileNameBuffer[MAX_FILE_PATH];
 
 /////////////////////////////////////////////////////
@@ -130,6 +132,12 @@ VOID InitFileDialogs()
 	openFileDlg.lpstrTitle = "Select file to open";
 
 	ZeroMemory(fileNameBuffer, MAX_FILE_PATH);
+
+	ZeroMemory(&colorDialog, sizeof(CHOOSECOLORA));
+	colorDialog.lStructSize = sizeof(CHOOSECOLORA);
+	colorDialog.hwndOwner = hwnd;
+	colorDialog.lpCustColors = colorRef;
+	colorDialog.Flags = CC_RGBINIT | CC_SOLIDCOLOR;
 }
 
 /////////////////////////////////////////////////////
@@ -185,6 +193,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		case ID_TOOLBAR_RECTANGLE:
 			toolbar->SelectTool(paint::Tool::Rectangle);
+			break;
+		case ID_STYLE_PENCOLOR:
+			if (ChooseColorA(&colorDialog))
+			{
+				int a = 0;
+			}
+			break;
+		case ID_STYLE_BRUSHCOLOR:
+			if (ChooseColorA(&colorDialog))
+			{
+				
+			}
 			break;
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
