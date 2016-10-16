@@ -65,10 +65,15 @@ void Text::Deserialize(std::istream& s)
 tinyxml2::XMLElement* Text::ToXml(tinyxml2::XMLDocument* doc)
 {
 	tinyxml2::XMLElement* element = doc->NewElement("Text");
-	element->InsertEndChild(m_topLeft.ToXml(doc));
-	tinyxml2::XMLElement* textElement = doc->NewElement("Value");
-	textElement->SetText(m_text.c_str());
-	element->InsertEndChild(textElement);
+	
+	element->InsertEndChild(m_topLeft.ToXml(doc));								// Position
+	tinyxml2::XMLElement* textElement = doc->NewElement("Value");				// Text value
+	textElement->SetText(m_text.c_str());										//
+	element->InsertEndChild(textElement);										//
+	tinyxml2::XMLElement* colorElement = doc->NewElement("Color");				// Color
+	colorElement->SetAttribute("Value", static_cast<unsigned int>(m_color));	//
+	element->InsertEndChild(colorElement);										//
+	element->InsertEndChild(m_font->ToXml(doc));								// Font
 	
 	return element;
 }
@@ -79,9 +84,14 @@ void Text::FromXml(tinyxml2::XMLElement* element)
 {
 	auto topLeftElement = element->FirstChild();
 	auto textElement = topLeftElement->NextSibling();
+	auto colorElement = textElement->NextSibling();
+	auto fontElement = colorElement->NextSibling();
 
 	m_topLeft.FromXml(topLeftElement->ToElement());
-	m_text = textElement->Value();
+	m_text = textElement->ToElement()->GetText();
+	m_color = colorElement->ToElement()->UnsignedAttribute("Value");
+	m_font = std::make_shared<Font>();
+	m_font->FromXml(fontElement->ToElement());
 }
 
 /////////////////////////////////////////////////////

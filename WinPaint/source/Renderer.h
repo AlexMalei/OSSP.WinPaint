@@ -4,6 +4,7 @@
 #include <vector>
 #include "Creators/BaseCreator.h"
 #include "Shapes/Point.h"
+#include "Shapes/Font.h"
 #include "Renderers/IRenderer.h"
 #include <unordered_map>
 
@@ -29,7 +30,9 @@ namespace paint
 		void DrawLine(Point from, Point to);
 		void DrawRect(Point from, Point to, bool hollow);
 		void DrawEllipse(Point from, Point to, bool hollow);
-		void DrawText(Point position, LPCSTR text, DWORD length);
+		void DrawText(Point position, LPCSTR text, DWORD length, Font* font, COLORREF color);
+
+		HDC GetBackBuffer() const { return m_offscreenHdc; }
 
 	private:
 		void RenderShape(Shape* shape);

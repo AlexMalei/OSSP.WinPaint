@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "Renderer.h"
-#include "Shapes/Line.h"
 #include "AppContext.h"
 #include "SceneManager.h"
-#include "Shapes/Pen.h"
 #include "Renderers/PenRenderer.h"
 #include "Renderers/LineRenderer.h"
 #include "Renderers/RectangleRenderer.h"
@@ -19,9 +17,6 @@ Renderer::Renderer(HWND hWnd)
 	: m_hwnd(hWnd)
 {
 	Init();
-
-	auto shape = new paint::Line(paint::Point(25, 50), paint::Point(150, 75));
-	m_shapes.push_back(shape);
 }
 
 /////////////////////////////////////////////////////
@@ -181,8 +176,11 @@ void Renderer::DrawEllipse(Point from, Point to, bool hollow)
 
 /////////////////////////////////////////////////////
 
-void Renderer::DrawText(Point position, LPCSTR text, DWORD length)
+void Renderer::DrawText(Point position, LPCSTR text, DWORD length, Font* font, COLORREF color)
 {
+	font->Apply(m_offscreenHdc);			// Select font	
+	SetTextColor(m_offscreenHdc, color);	// Select text color
+
 	TextOutA(m_offscreenHdc, position.x, position.y, text, length);
 }
 

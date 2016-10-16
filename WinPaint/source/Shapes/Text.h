@@ -1,6 +1,7 @@
 #pragma once
 #include "Shape.h"
 #include "Point.h"
+#include "Font.h"
 
 namespace paint
 {
@@ -22,6 +23,11 @@ namespace paint
 		void Append(const std::string& str) { m_text += str; }
 		void EraseLast();
 
+		void SetColor(COLORREF color) { m_color = color; }
+		COLORREF GetColor() const { return m_color; }
+		void SetFont(std::shared_ptr<Font> font) { m_font = font; }
+		std::shared_ptr<Font> GetFont() const { return m_font; }
+
 		virtual Tool GetTool() override { return Tool::Text; }
 
 		virtual void Serialize(std::ostream& s) override;
@@ -37,5 +43,7 @@ namespace paint
 	protected:
 		Point m_topLeft;
 		std::string m_text;
+		COLORREF m_color;
+		std::shared_ptr<Font> m_font;
 	};
 }

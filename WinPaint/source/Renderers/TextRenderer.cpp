@@ -15,7 +15,8 @@ void TextRenderer::Render(Shape* shape)
 	auto topLeft = text->GetTopLeft();
 	auto textValue = text->GetText();
 
-	AppContext::GetInstance()->GetRenderer()->DrawText(topLeft, textValue.c_str(), textValue.length());
+	AppContext::GetInstance()->GetRenderer()->DrawText(
+		topLeft, textValue.c_str(), textValue.length(), text->GetFont().get(), text->GetColor());
 }
 
 /////////////////////////////////////////////////////

@@ -15,9 +15,11 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 HWND hwnd;
 HMENU menu;
 OPENFILENAMEA openFileDlg;
+CHOOSEFONTA fontDlg;
 CHOOSECOLORA colorDialog;
 COLORREF colorRef[16];
 CHAR fileNameBuffer[MAX_FILE_PATH];
+LOGFONTA logFont;
 
 /////////////////////////////////////////////////////
 
@@ -139,6 +141,14 @@ VOID InitFileDialogs()
 	colorDialog.hwndOwner = hwnd;
 	colorDialog.lpCustColors = colorRef;
 	colorDialog.Flags = CC_RGBINIT | CC_SOLIDCOLOR;
+
+	ZeroMemory(&fontDlg, sizeof(CHOOSEFONTA));
+	fontDlg.lStructSize = sizeof(CHOOSEFONTA);
+	fontDlg.hwndOwner = hwnd;
+	fontDlg.lpLogFont = &logFont;
+	fontDlg.Flags = CF_EFFECTS;
+	fontDlg.nSizeMin = 8;
+	fontDlg.nSizeMax = 72;
 }
 
 /////////////////////////////////////////////////////
@@ -226,6 +236,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case ID_STYLE_PENWIDTH:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_PEN_VIEW), hWnd, PenWidthDialog);
 			break;
+		case ID_STYLE_TEXTFONT:
+			if (ChooseFontA(&fontDlg))
+			{
+				context->GetToolbar()->SetFont(std::make_shared<paint::Font>(fontDlg.lpLogFont));
+			}
+			break;
 		case ID_TOOLBAR_POLYLINE:
 			toolbar->SelectTool(paint::Tool::Polyline);
 			break;
@@ -297,7 +313,7 @@ INT_PTR CALLBACK PenWidthDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 	case WM_INITDIALOG:
 		sliderPos = context->GetToolbar()->GetLineThickness();
 		tempStr = std::to_string(sliderPos);
-		sliderPos = (static_cast<float>(sliderPos) / maxThickness) * 100;
+		sliderPos = static_cast<DWORD>((static_cast<FLOAT>(sliderPos) / maxThickness) * 100);
 		SendMessage(GetDlgItem(hDlg, IDC_SLIDER), TBM_SETPOS, TRUE, sliderPos);
 		
 		SetDlgItemTextA(hDlg, IDC_SLIDER_DESC, tempStr.c_str());

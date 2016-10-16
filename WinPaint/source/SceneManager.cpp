@@ -6,6 +6,9 @@
 #include "Shapes/Pen.h"
 #include "Shapes/Rectangle.h"
 #include "Shapes/Ellipse.h"
+#include "Shapes/Polyline.h"
+#include "Shapes/Text.h"
+#include <sstream>
 
 using namespace paint;
 using namespace tinyxml2;
@@ -40,6 +43,8 @@ void SceneManager::InitShapesFactory()
 	m_shapesFactory.insert(std::pair<DWORD, IFactory*>(Tool::Line, new Factory<Line>));
 	m_shapesFactory.insert(std::pair<DWORD, IFactory*>(Tool::Rectangle, new Factory<Rectangle>));
 	m_shapesFactory.insert(std::pair<DWORD, IFactory*>(Tool::Ellipse, new Factory<Ellipse>));
+	m_shapesFactory.insert(std::pair<DWORD, IFactory*>(Tool::Text, new Factory<Text>));
+	m_shapesFactory.insert(std::pair<DWORD, IFactory*>(Tool::Polyline, new Factory<Polyline>));
 }
 
 /////////////////////////////////////////////////////
@@ -189,6 +194,14 @@ void SceneManager::LoadFromEnhancedMetafile(const char* path)
 				m_shapes.push_back(shape);	// Add to scene
 			}
 		}	
+		else
+		{
+			std::ostringstream errorText;
+			errorText << "Can't reproduce element of type \"";
+			errorText << name;
+			errorText << "\": Factory not detected!";
+			MessageBoxExA(context->GetWindowHandle(), errorText.str().c_str(), "IO Error", MB_ICONERROR, 0);
+		}
 	}
 
 	m_sceneHasChanges = false;

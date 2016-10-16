@@ -11,6 +11,11 @@ void TextCreator::OnPress(int x, int y)
 {
 	Point startPoint(x, y);
 	m_createdShape = new Text(startPoint);
+	Text* text = static_cast<Text*>(m_createdShape);
+
+	auto toolbar = AppContext::GetInstance()->GetToolbar();
+	text->SetFont(toolbar->GetFont());
+	text->SetColor(toolbar->GetPenColor());
 }
 
 /////////////////////////////////////////////////////

@@ -13,6 +13,34 @@ Toolbar::Toolbar()
 	m_style.m_penColor = 0xFF000000;
 	m_style.m_brushColor = 0xFFFFFFFF;
 	m_style.m_penThickness = 2;
+
+	InitDefaultFont();
+}
+
+/////////////////////////////////////////////////////
+
+void Toolbar::InitDefaultFont()
+{
+	LOGFONTA logFont;
+	ZeroMemory(&logFont, sizeof(LOGFONTA));
+
+	logFont.lfCharSet = ANSI_CHARSET;
+	logFont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+	logFont.lfOutPrecision = OUT_DEFAULT_PRECIS;
+	logFont.lfEscapement = 0;
+	logFont.lfOrientation = 0;
+	LPCSTR fontName = "Arial";
+	memcpy(logFont.lfFaceName, fontName, strlen(fontName));
+	logFont.lfWidth = 0;
+	logFont.lfHeight = -24;
+	logFont.lfItalic = FALSE;
+	logFont.lfUnderline = FALSE;
+	logFont.lfStrikeOut = FALSE;
+	logFont.lfWeight = FW_NORMAL;
+	logFont.lfQuality = DEFAULT_QUALITY;
+	logFont.lfPitchAndFamily = FF_DONTCARE;
+
+	m_font.reset(new Font(&logFont));
 }
 
 /////////////////////////////////////////////////////

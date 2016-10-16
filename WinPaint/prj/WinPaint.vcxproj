@@ -172,6 +172,7 @@
     <ClInclude Include="..\source\Savers\IBitmapSaver.h" />
     <ClInclude Include="..\source\SceneManager.h" />
     <ClInclude Include="..\source\Shapes\Ellipse.h" />
+    <ClInclude Include="..\source\Shapes\Font.h" />
     <ClInclude Include="..\source\Shapes\Line.h" />
     <ClInclude Include="..\source\Shapes\Pen.h" />
     <ClInclude Include="..\source\Shapes\Point.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="..\source\Renderers\TextRenderer.cpp" />
     <ClCompile Include="..\source\SceneManager.cpp" />
     <ClCompile Include="..\source\Shapes\Ellipse.cpp" />
+    <ClCompile Include="..\source\Shapes\Font.cpp" />
     <ClCompile Include="..\source\Shapes\Line.cpp" />
     <ClCompile Include="..\source\Shapes\Pen.cpp" />
     <ClCompile Include="..\source\Shapes\Polyline.cpp" />
