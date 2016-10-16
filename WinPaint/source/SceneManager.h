@@ -28,6 +28,7 @@ namespace paint
 
 		void SaveToEnhancedMetafile(const char* path);
 		void LoadFromEnhancedMetafile(const char* path);
+		void SaveToBitmap(const char* path);
 
 		void Clear();
 
@@ -35,6 +36,8 @@ namespace paint
 
 	private:
 		void InitShapesFactory();
+
+		bool HDCToFile(LPCSTR filePath, HDC context, RECT area, WORD bitsPerPixel);
 
 		std::vector<Shape*> m_shapes;
 		std::vector<Shape*> m_undoBuffer;

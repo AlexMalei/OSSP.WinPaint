@@ -180,7 +180,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (GetSaveFileNameA(&openFileDlg))
 			{
 				SaveToFile(openFileDlg.lpstrFile);
-				
 			}
 			break;
 		case IDM_SAVEAS:
@@ -388,7 +387,7 @@ VOID SaveToFile(LPCSTR path)
 		}
 		else if (strcmp(ext, "bmp") == 0)
 		{
-
+			paint::SceneManager::GetInstance()->SaveToBitmap(path);
 		}
 	}
 }

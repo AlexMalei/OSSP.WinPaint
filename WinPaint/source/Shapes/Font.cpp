@@ -12,6 +12,13 @@ Font::Font()
 
 /////////////////////////////////////////////////////
 
+Font::~Font()
+{
+	DeleteObject(m_font);
+}
+
+/////////////////////////////////////////////////////
+
 Font::Font(LPLOGFONTA logicFont)
 {
 	m_face = logicFont->lfFaceName;

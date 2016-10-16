@@ -8,6 +8,7 @@ namespace paint
 	public:
 		Font();
 		Font(LPLOGFONTA logicFont);
+		~Font();
 
 		HFONT GetHandle() const { return m_font; }
 		void Apply(HDC hdc) { SelectObject(hdc, m_font); }

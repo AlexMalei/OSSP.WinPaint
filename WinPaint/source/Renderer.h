@@ -24,6 +24,7 @@ namespace paint
 		void Refresh();
 
 		BITMAP GetImage();
+		Point GetSize();
 
 		IRenderer* GetShapeRenderer(Tool tool) const;
 
@@ -33,6 +34,7 @@ namespace paint
 		void DrawText(Point position, LPCSTR text, DWORD length, Font* font, COLORREF color);
 
 		HDC GetBackBuffer() const { return m_offscreenHdc; }
+		HDC GetScreenBuffer() const { return m_screenContext; }
 
 	private:
 		void RenderShape(Shape* shape);

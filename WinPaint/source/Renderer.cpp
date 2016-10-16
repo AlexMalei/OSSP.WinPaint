@@ -202,3 +202,10 @@ void Renderer::RefreshShapeStyle(Shape* shape)
 }
 
 /////////////////////////////////////////////////////
+
+Point Renderer::GetSize()
+{
+	return Point(m_wndClientRect.right - m_wndClientRect.left, m_wndClientRect.bottom - m_wndClientRect.top);
+}
+
+/////////////////////////////////////////////////////

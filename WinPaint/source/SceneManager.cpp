@@ -9,6 +9,7 @@
 #include "Shapes/Polyline.h"
 #include "Shapes/Text.h"
 #include <sstream>
+#include <fstream>
 
 using namespace paint;
 using namespace tinyxml2;
@@ -138,6 +139,31 @@ void SceneManager::UpdateHistoryButtons()
 
 /////////////////////////////////////////////////////
 
+void SceneManager::SaveToBitmap(const char* path)
+{
+	HWND hwnd = AppContext::GetInstance()->GetWindowHandle();
+
+	// Get screen HDC
+	PAINTSTRUCT ps;
+	HDC context = BeginPaint(hwnd, &ps);
+
+	// Get buffer size
+	auto renderer = AppContext::GetInstance()->GetRenderer();
+	Point size = renderer->GetSize();
+
+	// Write hdc to bmp file
+	RECT area;
+	area.left = 0;
+	area.right = size.x;
+	area.top = 0;
+	area.bottom = size.y;
+	HDCToFile(path, context, area, 24);
+
+	EndPaint(hwnd, &ps);
+}
+
+/////////////////////////////////////////////////////
+
 void SceneManager::SaveToEnhancedMetafile(const char* path)
 {
 	XMLDocument doc;
@@ -220,6 +246,50 @@ void SceneManager::Clear()
 	auto context = AppContext::GetInstance();
 	SceneManager::GetInstance()->UpdateHistoryButtons();
 	context->GetRenderer()->Refresh();
+}
+
+/////////////////////////////////////////////////////
+
+bool SceneManager::HDCToFile(LPCSTR filePath, HDC context, RECT area, WORD bitsPerPixel = 24)
+{
+	DWORD width = area.right - area.left;
+	DWORD height = area.bottom - area.top;
+
+	BITMAPINFO info;
+	BITMAPFILEHEADER header;
+	ZeroMemory(&info, sizeof(BITMAPINFO));
+	ZeroMemory(&header, sizeof(BITMAPFILEHEADER));
+
+	info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	info.bmiHeader.biWidth = width;
+	info.bmiHeader.biHeight = height;
+	info.bmiHeader.biPlanes = 1;
+	info.bmiHeader.biBitCount = bitsPerPixel;
+	info.bmiHeader.biCompression = BI_RGB;
+	header.bfType = 0x4D42;
+	header.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+	char* pixels = nullptr;
+	HDC tempDC = CreateCompatibleDC(context);
+	HBITMAP section = CreateDIBSection(context, &info, DIB_RGB_COLORS, (void**)&pixels, 0, 0);
+	DeleteObject(SelectObject(tempDC, section));
+	BitBlt(tempDC, 0, 0, width, height, context, area.left, area.top, SRCCOPY);
+	DeleteDC(tempDC);
+
+	std::fstream hFile(filePath, std::ios::out | std::ios::binary);
+	if (hFile.is_open())
+	{
+		hFile.write((char*)&header, sizeof(header));
+		hFile.write((char*)&info.bmiHeader, sizeof(info.bmiHeader));
+		hFile.write(pixels, (((bitsPerPixel * width + 31) & ~31) / 8) * height);
+		hFile.close();
+		DeleteObject(section);
+
+		return true;
+	}
+	DeleteObject(section);
+
+	return false;
 }
 
 /////////////////////////////////////////////////////
