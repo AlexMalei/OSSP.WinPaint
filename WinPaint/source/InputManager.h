@@ -30,6 +30,7 @@ namespace paint
 		InputManager();
 
 		void Update(HWND hwnd);
+		void OnCharKeyPress(char c);
 
 		bool MouseKeyPressed(MouseButton button) const { return m_mousePressed[button.value()]; }
 

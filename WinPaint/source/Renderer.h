@@ -29,6 +29,7 @@ namespace paint
 		void DrawLine(Point from, Point to);
 		void DrawRect(Point from, Point to, bool hollow);
 		void DrawEllipse(Point from, Point to, bool hollow);
+		void DrawText(Point position, LPCSTR text, DWORD length);
 
 	private:
 		void RenderShape(Shape* shape);

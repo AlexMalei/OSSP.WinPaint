@@ -5,6 +5,7 @@
 #include "Creators/RectangleCreator.h"
 #include "Creators/EllipseCreator.h"
 #include "Creators/PolylineCreator.h"
+#include "Creators/TextCreator.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "resource.h"
@@ -99,6 +100,7 @@ void AppContext::InitToolbar()
 	m_toolbar->RegisterTool(Tool::Ellipse, new EllipseCreator())->AddObserver(sceneMgr);
 	m_toolbar->RegisterTool(Tool::Rectangle, new RectangleCreator())->AddObserver(sceneMgr);
 	m_toolbar->RegisterTool(Tool::Polyline, new PolylineCreator())->AddObserver(sceneMgr);
+	m_toolbar->RegisterTool(Tool::Text, new TextCreator())->AddObserver(sceneMgr);
 }
 
 /////////////////////////////////////////////////////

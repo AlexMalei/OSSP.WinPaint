@@ -167,3 +167,10 @@ void InputManager::RefreshCursorPosition(HWND hwnd)
 }
 
 /////////////////////////////////////////////////////
+
+void InputManager::OnCharKeyPress(char c)
+{
+	EmitKeyPressEvent(static_cast<DWORD>(c));
+}
+
+/////////////////////////////////////////////////////

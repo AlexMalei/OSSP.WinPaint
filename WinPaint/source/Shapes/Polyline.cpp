@@ -67,6 +67,7 @@ void Polyline::FromXml(tinyxml2::XMLElement* element)
 		m_segments.push_back(segment);
 	}
 
+
 	m_style.FromXml(last->ToElement());
 }
 

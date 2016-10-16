@@ -154,6 +154,7 @@
     <ClInclude Include="..\source\Creators\PenDrawer.h" />
     <ClInclude Include="..\source\Creators\PolylineCreator.h" />
     <ClInclude Include="..\source\Creators\RectangleCreator.h" />
+    <ClInclude Include="..\source\Creators\TextCreator.h" />
     <ClInclude Include="..\source\InputManager.h" />
     <ClInclude Include="..\source\Observers\CreationObserver.h" />
     <ClInclude Include="..\source\Observers\Observable.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="..\source\Renderers\PenRenderer.h" />
     <ClInclude Include="..\source\Renderers\PolylineRenderer.h" />
     <ClInclude Include="..\source\Renderers\RectangleRenderer.h" />
+    <ClInclude Include="..\source\Renderers\TextRenderer.h" />
     <ClInclude Include="..\source\resource.h" />
     <ClInclude Include="..\source\Savers\BmpSaver.h" />
     <ClInclude Include="..\source\Savers\IBitmapSaver.h" />
@@ -177,6 +179,7 @@
     <ClInclude Include="..\source\Shapes\Rectangle.h" />
     <ClInclude Include="..\source\Shapes\Shape.h" />
     <ClInclude Include="..\source\Shapes\ShapeStyle.h" />
+    <ClInclude Include="..\source\Shapes\Text.h" />
     <ClInclude Include="..\source\stdafx.h" />
     <ClInclude Include="..\source\System\ISerializable.h" />
     <ClInclude Include="..\source\System\IXmlConvertable.h" />
@@ -194,6 +197,7 @@
     <ClCompile Include="..\source\Creators\PenDrawer.cpp" />
     <ClCompile Include="..\source\Creators\PolylineCreator.cpp" />
     <ClCompile Include="..\source\Creators\RectangleCreator.cpp" />
+    <ClCompile Include="..\source\Creators\TextCreator.cpp" />
     <ClCompile Include="..\source\InputManager.cpp" />
     <ClCompile Include="..\source\Renderer.cpp" />
     <ClCompile Include="..\source\Renderers\EllipseRenderer.cpp" />
@@ -201,12 +205,14 @@
     <ClCompile Include="..\source\Renderers\PenRenderer.cpp" />
     <ClCompile Include="..\source\Renderers\PolylineRenderer.cpp" />
     <ClCompile Include="..\source\Renderers\RectangleRenderer.cpp" />
+    <ClCompile Include="..\source\Renderers\TextRenderer.cpp" />
     <ClCompile Include="..\source\SceneManager.cpp" />
     <ClCompile Include="..\source\Shapes\Ellipse.cpp" />
     <ClCompile Include="..\source\Shapes\Line.cpp" />
     <ClCompile Include="..\source\Shapes\Pen.cpp" />
     <ClCompile Include="..\source\Shapes\Polyline.cpp" />
     <ClCompile Include="..\source\Shapes\Rectangle.cpp" />
+    <ClCompile Include="..\source\Shapes\Text.cpp" />
     <ClCompile Include="..\source\TinyXml\tinyxml2.cpp" />
     <ClCompile Include="..\source\Toolbar.cpp" />
     <ClCompile Include="..\source\WinPaint.cpp" />

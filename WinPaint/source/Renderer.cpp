@@ -9,6 +9,7 @@
 #include "Renderers/RectangleRenderer.h"
 #include "Renderers/EllipseRenderer.h"
 #include "Renderers/PolylineRenderer.h"
+#include "Renderers/TextRenderer.h"
 
 using namespace paint;
 
@@ -97,6 +98,7 @@ void Renderer::InitShapeRenderers()
 	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Rectangle, new RectangleRenderer()));
 	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Ellipse, new EllipseRenderer()));
 	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Polyline, new PolylineRenderer()));
+	m_shapeRenderers.insert(std::pair<int, IRenderer*>(Tool::Text, new TextRenderer()));
 }
 
 /////////////////////////////////////////////////////
@@ -175,6 +177,13 @@ void Renderer::DrawEllipse(Point from, Point to, bool hollow)
 	}
 	
 	Ellipse(m_offscreenHdc, from.x, from.y, to.x, to.y);
+}
+
+/////////////////////////////////////////////////////
+
+void Renderer::DrawText(Point position, LPCSTR text, DWORD length)
+{
+	TextOutA(m_offscreenHdc, position.x, position.y, text, length);
 }
 
 /////////////////////////////////////////////////////

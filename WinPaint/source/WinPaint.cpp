@@ -197,6 +197,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case ID_TOOLBAR_RECTANGLE:
 			toolbar->SelectTool(paint::Tool::Rectangle);
 			break;
+		case ID_TOOLBAR_TEXT:
+			toolbar->SelectTool(paint::Tool::Text);
+			break;
 		case ID_STYLE_PENCOLOR:
 			if (ChooseColorA(&colorDialog))
 			{
@@ -237,6 +240,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	break;
+	case WM_CHAR:
+		paint::InputManager::GetInstance()->OnCharKeyPress(static_cast<char>(wParam));
+		break;
 	case WM_PAINT:
 		context->OnRender();
 		break;
@@ -333,6 +339,7 @@ VOID InitToolsMenuItemsAssocs()
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_RECTANGLE, paint::Tool::Rectangle));
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_ELLIPSE, paint::Tool::Ellipse));
 	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_POLYLINE, paint::Tool::Polyline));
+	assocs.insert(std::pair<DWORD, paint::Tool>(ID_TOOLBAR_TEXT, paint::Tool::Text));
 
 	auto toolbar = context->GetToolbar();
 	toolbar->LoadMenuItemLinks(assocs);
